@@ -50,12 +50,12 @@ namespace SpaceInvaders.Common
         public HighScoreList LoadHighScores()
         {
             var highScoresJson = PlayerPrefs.GetString(PlayerPrefsKeys.HighScores, "");
-            var highScoreListlist = JsonUtility.FromJson<HighScoreList>(highScoresJson);
-            if (highScoreListlist == null)
+            var highScoreList = JsonUtility.FromJson<HighScoreList>(highScoresJson);
+            if (highScoreList == null)
             {
-                highScoreListlist = new HighScoreList();
+                highScoreList = new HighScoreList();
             }
-            return highScoreListlist;
+            return highScoreList;
         }
 
         private void SaveHighScores(HighScoreList highScoreList)

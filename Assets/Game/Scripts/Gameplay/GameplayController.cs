@@ -1,6 +1,5 @@
 using MijanTools.Components;
 using SpaceInvaders.Common;
-using SpaceInvaders.Util;
 using UnityEngine;
 using Zenject;
 
@@ -12,13 +11,16 @@ namespace SpaceInvaders.Gameplay
         private GameManager _gameManager;
         private GameplayConfig _gameplayConfig;
         private GameplayAssetsConfig _gameplayAssetsConfig;
-        private InputService _inputService;
-        private GameStatsController _gameStatsController;
-        private HighScoreService _highScoreService;
-        private Camera _camera;
 
+        private InputService _inputService;
+        private HighScoreService _highScoreService;
+        private GameStatsController _gameStatsController;
+        private Camera _camera;
+        
+        private Player.Factory _playerFactory;
+        private EnemyWave.Factory _enemyWaveFactory;
         private ObjectPool<Projectile> _projectilePool;
-        private readonly int _projectilePoolInitialCapacity = 20;
+        
         private Player _player;
         private EnemyWave _enemyWave;
         private float _resultsScreenTimer;
@@ -28,17 +30,23 @@ namespace SpaceInvaders.Gameplay
             GameplayConfig gameplayConfig, 
             GameplayAssetsConfig gameplayAssetsConfig,
             InputService inputService, 
-            GameStatsController gameStatsController, 
             HighScoreService highScoreService,
-            Camera camera)
+            GameStatsController gameStatsController,
+            Camera camera,
+            ObjectPool<Projectile> projectilePool,
+            Player.Factory playerFactory,
+            EnemyWave.Factory enemyWaveFactory)
         {
             _gameManager = gameManager;
             _gameplayConfig = gameplayConfig;
             _gameplayAssetsConfig = gameplayAssetsConfig;
             _inputService = inputService;
-            _gameStatsController = gameStatsController;
             _highScoreService = highScoreService;
+            _gameStatsController = gameStatsController;
             _camera = camera;
+            _projectilePool = projectilePool;
+            _playerFactory = playerFactory;
+            _enemyWaveFactory = enemyWaveFactory;
 
             UpdateCameraSize();
             SetupPrefabs();
@@ -54,23 +62,20 @@ namespace SpaceInvaders.Gameplay
         // Methods
         private void SetupPrefabs()
         {
-            var projectilePoolParent = new GameObject(Constants.ProjectilePoolObjectName).transform;
-            projectilePoolParent.parent = transform;
-            _projectilePool = new ObjectPool<Projectile>(_gameplayAssetsConfig.Projectile, _projectilePoolInitialCapacity, projectilePoolParent);
+            _projectilePool.Parent.parent = transform;
 
-            _player = Instantiate(_gameplayAssetsConfig.Player, transform);
-            _player.Init(_gameplayConfig, _projectilePool, _gameStatsController);
+            _player = _playerFactory.Create(_gameplayAssetsConfig.Player);
             _player.OnPlayerDied += OnPlayerDied;
-            
-            _enemyWave = Instantiate(_gameplayAssetsConfig.EnemyWave, transform);
-            _enemyWave.Init(_gameplayAssetsConfig, _gameplayConfig, _projectilePool, _gameStatsController);
+            _player.SetActive(false);
+
+            _enemyWave = _enemyWaveFactory.Create(_gameplayAssetsConfig.EnemyWave);
+            _enemyWave.transform.parent = transform;
         }
 
         public void StartGame()
         {
             _player.SetActive(true);
-            _player.ResetPosition();
-            _player.ResetColor();
+            _player.ResetState();
 
             _gameStatsController.ResetStats();
 

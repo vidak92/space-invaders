@@ -1,6 +1,7 @@
 using MijanTools.Components;
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 namespace SpaceInvaders.Gameplay
 {
@@ -48,11 +49,14 @@ namespace SpaceInvaders.Gameplay
 
     public class EnemyWave : MonoBehaviour
     {
+        public class Factory : PlaceholderFactory<UnityEngine.Object, EnemyWave> { }
+
         // Fields
         private GameplayAssetsConfig _gameplayAssetsConfig;
         private GameplayConfig _gameplayConfig;
         private ObjectPool<Projectile> _projectilePool;
         private GameStatsController _gameStatsController;
+        private Enemy.Factory _enemyFactory;
 
         private Enemy[,] _enemies;
         private MoveState _moveState;
@@ -84,15 +88,18 @@ namespace SpaceInvaders.Gameplay
         private float HorizontalCellSize => (GameplayBounds.Right - GameplayBounds.Left) / WaveConfig.MaxGridColumns;
         private float VerticalCellSize => (GameplayBounds.Top - GameplayBounds.Bottom) / WaveConfig.MaxGridRows;
 
+        [Inject]
         public void Init(GameplayAssetsConfig gameplayAssetsConfig, 
             GameplayConfig gameplayConfig, 
             ObjectPool<Projectile> projectilePool, 
-            GameStatsController gameStatsController)
+            GameStatsController gameStatsController,
+            Enemy.Factory enemyFactory)
         {
             _gameplayAssetsConfig = gameplayAssetsConfig;
             _gameplayConfig = gameplayConfig;
             _projectilePool = projectilePool;
             _gameStatsController = gameStatsController;
+            _enemyFactory = enemyFactory;
 
             _enemies = new Enemy[ColumnCount, RowCount];
             for (int r = 0; r < RowCount; r++)
@@ -100,15 +107,16 @@ namespace SpaceInvaders.Gameplay
                 var enemyType = WaveConfig.EnemyRows[r];
                 for (int c = 0; c < ColumnCount; c++)
                 {
-                    var enemy = Instantiate(_gameplayAssetsConfig.GetEnemyPrefab(enemyType), transform);
+                    var enemy = _enemyFactory.Create(_gameplayAssetsConfig.GetEnemyPrefab(enemyType));
+                    enemy.transform.parent = transform;
                     enemy.name = $"Enemy({r}, {c})";
-                    enemy.Init(_gameplayConfig, _gameStatsController);
+                    enemy.SetActive(false);
                     _enemies[c, r] = enemy;
                 }
             }
 
-            _ufo = Instantiate(_gameplayAssetsConfig.UFO);
-            _ufo.Init(_gameplayConfig, gameStatsController);
+            _ufo = _enemyFactory.Create(_gameplayAssetsConfig.UFO) as EnemyUFO;
+            _ufo.SetActive(false);
         }
 
         // Methods
@@ -181,7 +189,7 @@ namespace SpaceInvaders.Gameplay
                 for (int c = 0; c < ColumnCount; c++)
                 {
                     _enemies[c, r].transform.localPosition = new Vector3(c * HorizontalCellSize, 0f, -r * VerticalCellSize);
-                    _enemies[c, r].SetAcitve(true);
+                    _enemies[c, r].SetActive(true);
                 }
             }
             _currentGridIndex = new GridIndex(0, 0);
@@ -206,13 +214,18 @@ namespace SpaceInvaders.Gameplay
         {
             foreach (var enemy in _enemies)
             {
-                enemy.SetAcitve(false);
+                enemy.SetActive(false);
             }
-            _ufo.SetAcitve(false);
+            _ufo.SetActive(false);
         }
 
         private bool IsCurrentWaveEmpty()
         {
+            if (_ufo.IsActive)
+            {
+                return false;
+            }
+
             foreach (var enemy in _enemies)
             {
                 if (enemy.IsActive)
@@ -220,6 +233,7 @@ namespace SpaceInvaders.Gameplay
                     return false;
                 }
             }
+            
             return true;
         }
 

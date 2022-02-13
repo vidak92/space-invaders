@@ -21,13 +21,13 @@ namespace SpaceInvaders.Gameplay
 
             if (transform.position.x < UFOConfig.BoundsLeft || transform.position.x > UFOConfig.BoundsRight)
             {
-                SetAcitve(false);
+                SetActive(false);
             }
         }
 
         public void Spawn()
         {
-            SetAcitve(true);
+            SetActive(true);
             float positionX;
             if (Random.Range(-1f, 1f) > 0f)
             {

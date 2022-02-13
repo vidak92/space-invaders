@@ -4,16 +4,18 @@ using SpaceInvaders.Common;
 using SpaceInvaders.Util;
 using System;
 using UnityEngine;
+using Zenject;
 
 namespace SpaceInvaders.Gameplay
 {
-    public class Player : MonoBehaviour, IShootable
+    public class Player : GameplayObject, IShootable
     {
+        public class Factory : PlaceholderFactory<UnityEngine.Object, Player> { }
+
         // Fields
         [SerializeField]
         private MeshRenderer _meshRenderer;
 
-        private GameplayConfig _gameplayConfig;
         private ObjectPool<Projectile> _projectilePool;
         private GameStatsController _gameStatsController;
 
@@ -24,24 +26,20 @@ namespace SpaceInvaders.Gameplay
         private float _invincibleTimer;
 
         // Properties
-        public bool IsActive => gameObject.activeSelf;
         private PlayerConfig PlayerConfig => _gameplayConfig.PlayerConfig;
         private GameplayBounds GameplayBounds => _gameplayConfig.GameplayBounds;
 
         public Action OnPlayerDied { get; set; }
         
-        public void Init(GameplayConfig gameplayConfig, ObjectPool<Projectile> projectilePool, GameStatsController gameStatsController)
+        [Inject]
+        private void Init(GameplayConfig gameplayConfig, ObjectPool<Projectile> projectilePool, GameStatsController gameStatsController)
         {
-            _gameplayConfig = gameplayConfig;
+            base.Init(gameplayConfig);
+
             _projectilePool = projectilePool;
             _gameStatsController = gameStatsController;
 
-            _speedX = 0f;
-            _shotCooldownTimer = 0f;
-
-            SetActive(false);
-            ResetPosition();
-
+            ResetState();
             _gameStatsController.OnLifeLost += OnLifeLost;
         }
 
@@ -54,6 +52,19 @@ namespace SpaceInvaders.Gameplay
                 hittable.TakeHit();
                 OnEnemyHit();
             }
+        }
+
+        // Overrides
+        public override void ResetState()
+        {
+            ResetPosition();
+            ResetColor();
+
+            _speedX = 0f;
+            _shotCooldownTimer = 0f;
+
+            _isInvincible = false;
+            _invincibleTimer = 0f;
         }
 
         // IShootable
@@ -105,17 +116,12 @@ namespace SpaceInvaders.Gameplay
             }
         }
 
-        public void SetActive(bool active)
-        {
-            gameObject.SetActive(active);
-        }
-
         public void ResetPosition()
         {
             transform.position = new Vector3(0f, 0f, GameplayBounds.Bottom);
         }
 
-        public void ResetColor()
+        private void ResetColor()
         {
             _meshRenderer.material.SetColor(Constants.MaterialColorPropertyName, Color.white);
         }

@@ -2,6 +2,7 @@ using MijanTools.Common;
 using MijanTools.Components;
 using System;
 using UnityEngine;
+using Zenject;
 
 namespace SpaceInvaders.Gameplay
 {
@@ -13,8 +14,10 @@ namespace SpaceInvaders.Gameplay
         Down
     }
 
-    public class Projectile : MonoBehaviour, IPoolable<Projectile>
+    public class Projectile : MonoBehaviour, MijanTools.Components.IPoolable<Projectile>
     {
+        public class Factory : PlaceholderFactory<UnityEngine.Object, Projectile> { }
+
         // Fields
         private GameplayConfig _gameplayConfig;
         private ProjectileConfig _projectileConfig;

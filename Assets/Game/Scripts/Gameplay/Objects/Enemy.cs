@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Zenject;
 
 namespace SpaceInvaders.Gameplay
 {
@@ -13,43 +14,35 @@ namespace SpaceInvaders.Gameplay
         UFO
     }
 
-    public class Enemy : MonoBehaviour, IShootable, IHittable
+    public class Enemy : GameplayObject, IShootable, IHittable
     {
+        public class Factory : PlaceholderFactory<UnityEngine.Object, Enemy> { }
+
         // Fields
         [SerializeField]
         private EnemyType _type;
 
-        protected GameplayConfig _gameplayConfig;
         protected GameStatsController _gameStatsController;
 
-        // Properties
-        public bool IsActive => gameObject.activeSelf;
-
+        [Inject]
         public void Init(GameplayConfig gameplayConfig, GameStatsController gameStatsController)
         {
-            _gameplayConfig = gameplayConfig;
+            base.Init(gameplayConfig);
+
             _gameStatsController = gameStatsController;
-
-            SetAcitve(false);
-        }
-
-        // Methods
-        public void SetAcitve(bool active)
-        {
-            gameObject.SetActive(active);
         }
 
         // IShootable
         public void TakeDamage()
         {
-            SetAcitve(false);
+            SetActive(false);
             _gameStatsController.OnEnemyShot(_type);
         }
 
         // IHittable
         public void TakeHit()
         {
-            SetAcitve(false);
+            SetActive(false);
             _gameStatsController.OnEnemyShot(_type);
         }
     }

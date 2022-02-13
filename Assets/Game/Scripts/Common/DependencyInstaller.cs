@@ -1,5 +1,7 @@
+using MijanTools.Components;
 using SpaceInvaders.Gameplay;
 using SpaceInvaders.UI;
+using SpaceInvaders.Util;
 using UnityEngine;
 using Zenject;
 
@@ -23,6 +25,8 @@ namespace SpaceInvaders.Common
         [SerializeField]
         private GameplayAssetsConfig _gameplayAssetsConfig;
 
+        private readonly int _projectilePoolInitialCapacity = 20;
+
         // Methods
         public override void InstallBindings()
         {
@@ -43,6 +47,15 @@ namespace SpaceInvaders.Common
             Container.Bind<GameplayState>().AsSingle().NonLazy();
             Container.Bind<ResultsState>().AsSingle().NonLazy();
             Container.Bind<HighScoresState>().AsSingle().NonLazy();
+
+            Container.BindFactory<Object, Projectile, Projectile.Factory>().FromFactory<PrefabFactory<Projectile>>().NonLazy();
+            Container.BindFactory<Object, Player, Player.Factory>().FromFactory<PrefabFactory<Player>>().NonLazy();
+            Container.BindFactory<Object, Enemy, Enemy.Factory>().FromFactory<PrefabFactory<Enemy>>().NonLazy();
+            Container.BindFactory<Object, EnemyWave, EnemyWave.Factory>().FromFactory<PrefabFactory<EnemyWave>>().NonLazy();
+
+            var projectilePoolParent = new GameObject(Constants.ProjectilePoolObjectName).transform;
+            var projectilePool = new ObjectPool<Projectile>(_gameplayAssetsConfig.Projectile, _projectilePoolInitialCapacity, projectilePoolParent);
+            Container.Bind<ObjectPool<Projectile>>().FromInstance(projectilePool).AsSingle().NonLazy();
         }
     }
 }
