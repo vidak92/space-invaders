@@ -1,8 +1,8 @@
 using System;
 
-namespace SpaceInvaders.Utils
+namespace SpaceInvaders.Util
 {
-    public static class Util
+    public static class Utils
     {
         public static string GetAssertGreaterThanMessage(Type objectType, string nameGreater, string nameLesser)
         {

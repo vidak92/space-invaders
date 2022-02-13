@@ -1,5 +1,5 @@
+using MijanTools.Common;
 using SpaceInvaders.UI;
-using SpaceInvaders.Utils;
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;

@@ -1,4 +1,4 @@
-using SpaceInvaders.Utils;
+using MijanTools.Common;
 using UnityEngine;
 
 namespace SpaceInvaders.Gameplay

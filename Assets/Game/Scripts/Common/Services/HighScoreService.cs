@@ -1,4 +1,4 @@
-using SpaceInvaders.Utils;
+using SpaceInvaders.Util;
 using System;
 using System.Collections.Generic;
 using UnityEngine;

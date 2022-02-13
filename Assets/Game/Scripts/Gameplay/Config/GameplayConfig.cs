@@ -1,4 +1,4 @@
-using SpaceInvaders.Utils;
+using SpaceInvaders.Util;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,8 +21,8 @@ namespace SpaceInvaders.Gameplay
 
         public void Validate()
         {
-            Assert.IsTrue(Right > Left, Util.GetAssertGreaterThanMessage(this.GetType(), nameof(Right), nameof(Left)));
-            Assert.IsTrue(Top > Bottom, Util.GetAssertGreaterThanMessage(this.GetType(), nameof(Top), nameof(Bottom)));
+            Assert.IsTrue(Right > Left, Utils.GetAssertGreaterThanMessage(this.GetType(), nameof(Right), nameof(Left)));
+            Assert.IsTrue(Top > Bottom, Utils.GetAssertGreaterThanMessage(this.GetType(), nameof(Top), nameof(Bottom)));
         }
     }
 
@@ -41,7 +41,7 @@ namespace SpaceInvaders.Gameplay
 
         public void Validate()
         {
-            Assert.IsTrue(MoveSpeed > 0f, Util.GetAssertGreaterThanMessage(this.GetType(), nameof(MoveSpeed), 0f));
+            Assert.IsTrue(MoveSpeed > 0f, Utils.GetAssertGreaterThanMessage(this.GetType(), nameof(MoveSpeed), 0f));
         }
     }
 
@@ -76,12 +76,12 @@ namespace SpaceInvaders.Gameplay
 
         public void Validate()
         {
-            Assert.IsTrue(StartLives > 0f, Util.GetAssertGreaterThanMessage(this.GetType(), nameof(StartLives), 0f));
+            Assert.IsTrue(StartLives > 0f, Utils.GetAssertGreaterThanMessage(this.GetType(), nameof(StartLives), 0f));
 
-            Assert.IsTrue(MoveSpeed > 0f, Util.GetAssertGreaterThanMessage(this.GetType(), nameof(MoveSpeed), 0f));
-            Assert.IsTrue(ShotCooldown > 0f, Util.GetAssertGreaterThanMessage(this.GetType(), nameof(ShotCooldown), 0f));
-            Assert.IsTrue(InvincibilityDuration > 0f, Util.GetAssertGreaterThanMessage(this.GetType(), nameof(InvincibilityDuration), 0f));
-            Assert.IsTrue(InvincibilityBlinkSpeed > 0f, Util.GetAssertGreaterThanMessage(this.GetType(), nameof(InvincibilityBlinkSpeed), 0f));
+            Assert.IsTrue(MoveSpeed > 0f, Utils.GetAssertGreaterThanMessage(this.GetType(), nameof(MoveSpeed), 0f));
+            Assert.IsTrue(ShotCooldown > 0f, Utils.GetAssertGreaterThanMessage(this.GetType(), nameof(ShotCooldown), 0f));
+            Assert.IsTrue(InvincibilityDuration > 0f, Utils.GetAssertGreaterThanMessage(this.GetType(), nameof(InvincibilityDuration), 0f));
+            Assert.IsTrue(InvincibilityBlinkSpeed > 0f, Utils.GetAssertGreaterThanMessage(this.GetType(), nameof(InvincibilityBlinkSpeed), 0f));
 
             ProjectileConfig.Validate();
         }
@@ -96,7 +96,7 @@ namespace SpaceInvaders.Gameplay
 
         public void Validate()
         {
-            Assert.IsTrue(Points > 0, Util.GetAssertGreaterThanMessage(this.GetType(), nameof(Points), 0));
+            Assert.IsTrue(Points > 0, Utils.GetAssertGreaterThanMessage(this.GetType(), nameof(Points), 0));
         }
     }
 
@@ -127,11 +127,11 @@ namespace SpaceInvaders.Gameplay
 
         public void Validate()
         {
-            Assert.IsTrue(MoveSpeed > 0f, Util.GetAssertGreaterThanMessage(this.GetType(), nameof(MoveSpeed), 0f));
-            Assert.IsTrue(SpeedMultiplier > 0f, Util.GetAssertGreaterThanMessage(this.GetType(), nameof(SpeedMultiplier), 0f));
+            Assert.IsTrue(MoveSpeed > 0f, Utils.GetAssertGreaterThanMessage(this.GetType(), nameof(MoveSpeed), 0f));
+            Assert.IsTrue(SpeedMultiplier > 0f, Utils.GetAssertGreaterThanMessage(this.GetType(), nameof(SpeedMultiplier), 0f));
 
-            Assert.IsTrue(BoundsRight > BoundsLeft, Util.GetAssertGreaterThanMessage(this.GetType(), nameof(BoundsRight), nameof(BoundsLeft)));
-            Assert.IsTrue(MaxSpawnDuration > MinSpawnDuration, Util.GetAssertGreaterThanMessage(this.GetType(), nameof(MaxSpawnDuration), nameof(MinSpawnDuration)));
+            Assert.IsTrue(BoundsRight > BoundsLeft, Utils.GetAssertGreaterThanMessage(this.GetType(), nameof(BoundsRight), nameof(BoundsLeft)));
+            Assert.IsTrue(MaxSpawnDuration > MinSpawnDuration, Utils.GetAssertGreaterThanMessage(this.GetType(), nameof(MaxSpawnDuration), nameof(MinSpawnDuration)));
         }
     }
 
@@ -229,17 +229,17 @@ namespace SpaceInvaders.Gameplay
 
         public void Validate()
         {
-            Assert.IsTrue(StepDuration > 0, Util.GetAssertGreaterThanMessage(this.GetType(), nameof(StepDuration), 0));
-            Assert.IsTrue(IdleDuration > 0, Util.GetAssertGreaterThanMessage(this.GetType(), nameof(IdleDuration), 0));
+            Assert.IsTrue(StepDuration > 0, Utils.GetAssertGreaterThanMessage(this.GetType(), nameof(StepDuration), 0));
+            Assert.IsTrue(IdleDuration > 0, Utils.GetAssertGreaterThanMessage(this.GetType(), nameof(IdleDuration), 0));
 
-            Assert.IsTrue(MaxWaveSpeedMultiplier > MinWaveSpeedMultiplier, Util.GetAssertGreaterThanMessage(this.GetType(), nameof(MaxWaveSpeedMultiplier), nameof(MinWaveSpeedMultiplier)));
+            Assert.IsTrue(MaxWaveSpeedMultiplier > MinWaveSpeedMultiplier, Utils.GetAssertGreaterThanMessage(this.GetType(), nameof(MaxWaveSpeedMultiplier), nameof(MinWaveSpeedMultiplier)));
             
-            Assert.IsTrue(MaxShotDelay > MinShotDelay, Util.GetAssertGreaterThanMessage(this.GetType(), nameof(MaxShotDelay), nameof(MinShotDelay)));
+            Assert.IsTrue(MaxShotDelay > MinShotDelay, Utils.GetAssertGreaterThanMessage(this.GetType(), nameof(MaxShotDelay), nameof(MinShotDelay)));
 
-            Assert.IsTrue(MaxGridRows > EnemyRows.Count, Util.GetAssertGreaterThanMessage(this.GetType(), nameof(MaxGridRows), nameof(EnemyRows)));
-            Assert.IsTrue(MaxGridColumns > EnemiesPerRow, Util.GetAssertGreaterThanMessage(this.GetType(), nameof(MaxGridColumns), nameof(EnemiesPerRow)));
-            Assert.IsTrue(EnemiesPerRow > 0, Util.GetAssertGreaterThanMessage(this.GetType(), nameof(EnemiesPerRow), 0));
-            Assert.IsTrue(EnemyRows.Count > 0, Util.GetAssertGreaterThanMessage(this.GetType(), nameof(EnemyRows), 0));
+            Assert.IsTrue(MaxGridRows > EnemyRows.Count, Utils.GetAssertGreaterThanMessage(this.GetType(), nameof(MaxGridRows), nameof(EnemyRows)));
+            Assert.IsTrue(MaxGridColumns > EnemiesPerRow, Utils.GetAssertGreaterThanMessage(this.GetType(), nameof(MaxGridColumns), nameof(EnemiesPerRow)));
+            Assert.IsTrue(EnemiesPerRow > 0, Utils.GetAssertGreaterThanMessage(this.GetType(), nameof(EnemiesPerRow), 0));
+            Assert.IsTrue(EnemyRows.Count > 0, Utils.GetAssertGreaterThanMessage(this.GetType(), nameof(EnemyRows), 0));
         }
     }
 
@@ -267,7 +267,7 @@ namespace SpaceInvaders.Gameplay
 
         public void Validate()
         {
-            Assert.IsTrue(CameraSize > 0f, Util.GetAssertGreaterThanMessage(this.GetType(), nameof(CameraSize), 0f));
+            Assert.IsTrue(CameraSize > 0f, Utils.GetAssertGreaterThanMessage(this.GetType(), nameof(CameraSize), 0f));
             GameplayBounds.Validate();
             PlayerConfig.Validate();
             EnemiesConfig.Validate();

@@ -1,5 +1,4 @@
-using SpaceInvaders.Common;
-using SpaceInvaders.Utils;
+using MijanTools.Components;
 using System.Collections.Generic;
 using UnityEngine;
 

@@ -1,5 +1,5 @@
 using SpaceInvaders.Common;
-using SpaceInvaders.Utils;
+using SpaceInvaders.Util;
 using System;
 using TMPro;
 using UnityEngine;
