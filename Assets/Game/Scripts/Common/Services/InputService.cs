@@ -77,7 +77,7 @@ namespace SpaceInvaders.Common
 
         private void OverrideActionsForEditor()
         {
-#if UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_STANDALONE
             var moveLeftKey = Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow);
             var moveRightKey = Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow);
             var isPointerOverUI = EventSystem.current.IsPointerOverGameObject();

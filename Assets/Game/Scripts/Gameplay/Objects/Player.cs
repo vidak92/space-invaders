@@ -3,6 +3,7 @@ using MijanTools.Components;
 using SpaceInvaders.Common;
 using SpaceInvaders.Util;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
@@ -25,6 +26,8 @@ namespace SpaceInvaders.Gameplay
         private bool _isInvincible;
         private float _invincibleTimer;
 
+        private List<Color> _materialColors = new List<Color>();
+
         // Properties
         private PlayerConfig PlayerConfig => _gameplayConfig.PlayerConfig;
         private GameplayBounds GameplayBounds => _gameplayConfig.GameplayBounds;
@@ -40,6 +43,7 @@ namespace SpaceInvaders.Gameplay
             _gameStatsController = gameStatsController;
 
             ResetState();
+            InitMaterialColors();
             _gameStatsController.OnLifeLost += OnLifeLost;
         }
 
@@ -104,7 +108,7 @@ namespace SpaceInvaders.Gameplay
                 var multiplier = Mathf.Cos(Time.time * PlayerConfig.InvincibilityBlinkSpeed);
                 multiplier = Mathf.Abs(multiplier);
                 var color = Color.Lerp(PlayerConfig.InvincibilityMinColorTint, PlayerConfig.InvincibilityMaxColorTint, multiplier);
-                _meshRenderer.material.SetColor(Constants.MaterialColorPropertyName, color);
+                SetColorMultiplier(color);
 
                 _invincibleTimer += dt;
                 if (_invincibleTimer > PlayerConfig.InvincibilityDuration)
@@ -123,7 +127,26 @@ namespace SpaceInvaders.Gameplay
 
         private void ResetColor()
         {
-            _meshRenderer.material.SetColor(Constants.MaterialColorPropertyName, Color.white);
+            SetColorMultiplier(PlayerConfig.InvincibilityMaxColorTint);
+        }
+
+        private void SetColorMultiplier(Color color)
+        {
+            for (int i = 0; i < _materialColors.Count; i++)
+            {
+                if (_meshRenderer.materials.ContainsIndex(i))
+                {
+                    _meshRenderer.materials[i].color = _materialColors[i] * color;
+                }
+            }
+        }
+
+        private void InitMaterialColors()
+        {
+            foreach (var material in _meshRenderer.materials)
+            {
+                _materialColors.Add(material.color);
+            }
         }
 
         private void OnLifeLost(int remainingLives)

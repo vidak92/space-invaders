@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Player: {fileID: 2651788195312753108, guid: cdfdd5743330b0b42b6c8d16ef0f394d, type: 3}
   Enemy1: {fileID: 2087893360827867395, guid: 51002b9ec421f004aa342d55209f347b, type: 3}
-  Enemy2: {fileID: -5141104293537227686, guid: bbed78d41abd78d4d856a4af60c5f179, type: 3}
-  Enemy3: {fileID: 5309931867075731327, guid: 2e4bb55d25940b247a4e58f42b685ebc, type: 3}
+  Enemy2: {fileID: 5309931867075731327, guid: 2e4bb55d25940b247a4e58f42b685ebc, type: 3}
+  Enemy3: {fileID: -5141104293537227686, guid: bbed78d41abd78d4d856a4af60c5f179, type: 3}
   UFO: {fileID: 6895895283300890278, guid: 06143129d1a0b874fb045dd92803d39b, type: 3}
   EnemyWave: {fileID: 6260151846400156523, guid: 9eb3da99c53e1ad4c84c309b50ed1638, type: 3}
   Projectile: {fileID: -3368777625204048398, guid: ae4edd1e85a500a4982a1809c63b235a, type: 3}
