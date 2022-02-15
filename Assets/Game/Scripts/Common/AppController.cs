@@ -6,7 +6,7 @@ using Zenject;
 
 namespace SpaceInvaders.Common
 {
-    public class GameManager : MonoBehaviour
+    public class AppController : MonoBehaviour
     {
         // Fields
         private UIController _uiController;

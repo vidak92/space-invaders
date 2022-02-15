@@ -7,9 +7,9 @@ namespace SpaceInvaders.Common
         // Fields
         private GameplayController _gameplayController;
 
-        public GameplayState(GameManager gameManager,
+        public GameplayState(AppController appController,
             GameplayController gameplayController)
-            : base(gameManager)
+            : base(appController)
         {
             _gameplayController = gameplayController;
         }

@@ -25,4 +25,10 @@ namespace SpaceInvaders.Util
         public const string Default = "Default";
         public const string Overlay = "Overlay";
     }
+
+    public static class SceneBuildIndices
+    {
+        public static int LoadingScene = 0;
+        public static int GameScene = 1;
+    }
 }

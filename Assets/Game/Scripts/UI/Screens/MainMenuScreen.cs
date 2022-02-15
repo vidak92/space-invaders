@@ -72,17 +72,17 @@ namespace SpaceInvaders.UI
 
         private void OnPlayButtonClicked()
         {
-            _gameManager.SetState(GameState.Gameplay);
+            _appController.SetState(GameState.Gameplay);
         }
 
         private void OnHighScoresButtonClicked()
         {
-            _gameManager.SetState(GameState.HighScores);
+            _appController.SetState(GameState.HighScores);
         }
 
         private void OnControlsButtonClicked()
         {
-            _gameManager.SetState(GameState.Controls);
+            _appController.SetState(GameState.Controls);
         }
     }
 }

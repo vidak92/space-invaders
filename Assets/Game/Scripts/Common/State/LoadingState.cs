@@ -1,11 +1,8 @@
-using System.Collections;
-using UnityEngine;
-
 namespace SpaceInvaders.Common
 {
     public class LoadingState : BaseState
     {
-        public LoadingState(GameManager gameManager) : base(gameManager) { }
+        public LoadingState(AppController appController) : base(appController) { }
 
         // Methods
         public override void Enter()
@@ -15,12 +12,7 @@ namespace SpaceInvaders.Common
 
         private void Load()
         {
-            _gameManager.SetState(GameState.MainMenu);
+            _appController.SetState(GameState.MainMenu);
         }
-
-        //private IEnumerator LoadingCoroutine()
-        //{
-        //    yield return new WaitForSeconds(1f);
-        //}
     }
 }

@@ -12,20 +12,20 @@ namespace SpaceInvaders.UI
         protected GameObject _container;
         
         protected UIController _uiController;
-        protected GameManager _gameManager;
+        protected AppController _appController;
         protected InputService _inputService;
         protected GameStatsController _gameStatsController;
         protected HighScoreService _highScoreService;
 
         [Inject]
         public virtual void Init(UIController uiController, 
-            GameManager gameManager, 
+            AppController appController, 
             InputService inputService, 
             GameStatsController gameStatsController,
             HighScoreService highScoreService)
         {
             _uiController = uiController;
-            _gameManager = gameManager;
+            _appController = appController;
             _inputService = inputService;
             _gameStatsController = gameStatsController;
             _highScoreService = highScoreService;

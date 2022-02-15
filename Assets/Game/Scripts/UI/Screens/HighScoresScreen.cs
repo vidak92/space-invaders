@@ -49,7 +49,7 @@ namespace SpaceInvaders.UI
         // Event Handlers
         private void OnExitButtonClicked()
         {
-            _gameManager.SetState(GameState.MainMenu);
+            _appController.SetState(GameState.MainMenu);
         }
     }
 }

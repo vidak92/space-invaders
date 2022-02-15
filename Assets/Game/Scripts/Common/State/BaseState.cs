@@ -14,11 +14,11 @@ namespace SpaceInvaders.Common
     public abstract class BaseState
     {
         // Fields
-        protected GameManager _gameManager;
+        protected AppController _appController;
 
-        public BaseState(GameManager gameManager)
+        public BaseState(AppController appController)
         {
-            _gameManager = gameManager;
+            _appController = appController;
         }
 
         // Methods

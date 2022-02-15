@@ -54,7 +54,7 @@ namespace SpaceInvaders.UI
         private void OnExitButtonClicked()
         {
             _gameStatsController.ResetStats();
-            _gameManager.SetState(GameState.MainMenu);
+            _appController.SetState(GameState.MainMenu);
         }
 
         private void OnGameStatsUpdated(GameStats gameStats)

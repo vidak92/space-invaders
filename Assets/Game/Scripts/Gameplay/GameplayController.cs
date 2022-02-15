@@ -8,7 +8,7 @@ namespace SpaceInvaders.Gameplay
     public class GameplayController : MonoBehaviour
     {
         // Fields
-        private GameManager _gameManager;
+        private AppController _appController;
         private GameplayConfig _gameplayConfig;
         private GameplayAssetsConfig _gameplayAssetsConfig;
 
@@ -26,7 +26,7 @@ namespace SpaceInvaders.Gameplay
         private float _resultsScreenTimer;
 
         [Inject]
-        private void Init(GameManager gameManager,
+        private void Init(AppController appController,
             GameplayConfig gameplayConfig, 
             GameplayAssetsConfig gameplayAssetsConfig,
             InputService inputService, 
@@ -37,7 +37,7 @@ namespace SpaceInvaders.Gameplay
             Player.Factory playerFactory,
             EnemyWave.Factory enemyWaveFactory)
         {
-            _gameManager = gameManager;
+            _appController = appController;
             _gameplayConfig = gameplayConfig;
             _gameplayAssetsConfig = gameplayAssetsConfig;
             _inputService = inputService;
@@ -108,7 +108,7 @@ namespace SpaceInvaders.Gameplay
                 _resultsScreenTimer += Time.deltaTime;
                 if (_resultsScreenTimer > _gameplayConfig.ResultsScreenDelay)
                 {
-                    _gameManager.SetState(GameState.Results);
+                    _appController.SetState(GameState.Results);
                 }
             }
         }

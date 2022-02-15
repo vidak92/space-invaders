@@ -11,7 +11,7 @@ namespace SpaceInvaders.Common
     {
         // Fields
         [SerializeField]
-        private GameManager _gameManagerPrefab;
+        private AppController _appControllerPrefab;
 
         [SerializeField]
         private UIController _uiControllerPrefab;
@@ -32,7 +32,7 @@ namespace SpaceInvaders.Common
         {
             Container.Bind<Camera>().FromInstance(Camera.main);
 
-            Container.Bind<GameManager>().FromComponentInNewPrefab(_gameManagerPrefab).AsSingle().NonLazy();
+            Container.Bind<AppController>().FromComponentInNewPrefab(_appControllerPrefab).AsSingle().NonLazy();
             Container.Bind<UIController>().FromComponentInNewPrefab(_uiControllerPrefab).AsSingle().NonLazy();
             Container.Bind<GameplayController>().FromComponentInNewPrefab(_gameplayController).AsSingle().NonLazy();
             Container.Bind<GameplayConfig>().FromScriptableObject(_gameplayConfig).AsSingle().NonLazy();
