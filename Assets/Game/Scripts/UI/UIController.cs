@@ -1,11 +1,16 @@
 using SpaceInvaders.Common;
+using SpaceInvaders.Util;
 using UnityEngine;
+using Zenject;
 
 namespace SpaceInvaders.UI
 {
     public class UIController : MonoBehaviour
     {
         // Fields
+        [SerializeField]
+        private Canvas _canvas;
+
         [SerializeField]
         private LoadingScreen _loadingScreen;
         
@@ -25,6 +30,17 @@ namespace SpaceInvaders.UI
         private ControlsScreen _controlsScreen;
 
         private BaseScreen _activeScreen;
+
+        private Camera _camera;
+
+        [Inject]
+        private void Init(Camera camera)
+        {
+            _camera = camera;
+
+            _canvas.worldCamera = _camera;
+            _canvas.sortingLayerName = SortingLayers.Overlay;
+        }
 
         // Methods
         public void SetState(GameState gameState)

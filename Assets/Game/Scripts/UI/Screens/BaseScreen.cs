@@ -18,7 +18,7 @@ namespace SpaceInvaders.UI
         protected HighScoreService _highScoreService;
 
         [Inject]
-        public void Init(UIController uiController, 
+        public virtual void Init(UIController uiController, 
             GameManager gameManager, 
             InputService inputService, 
             GameStatsController gameStatsController,
