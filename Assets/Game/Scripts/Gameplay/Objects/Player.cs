@@ -21,7 +21,7 @@ namespace SpaceInvaders.Gameplay
 
         private float _moveSpeedX;
         private float _accelerationTimer;
-        private readonly float _moveSpeedEpsilon = 0.032f;
+        private readonly float _accelerationTimerEpsilon = 0.064f;
         
         private float _shotCooldownTimer;
 
@@ -113,17 +113,17 @@ namespace SpaceInvaders.Gameplay
                 else
                 {
                     // Not moving.
-                    if (_accelerationTimer < 0f)
+                    if (_accelerationTimer < -_accelerationTimerEpsilon)
                     {
                         _accelerationTimer += dt;
                     }
-                    else
+                    else if (_accelerationTimer > _accelerationTimerEpsilon)
                     {
                         _accelerationTimer -= dt;
                     }
 
                     // Clamp velocity if it's close to 0 and there's no input.
-                    if (Mathf.Abs(_accelerationTimer) < _moveSpeedEpsilon) { _accelerationTimer = 0f; }
+                    if (Mathf.Abs(_accelerationTimer) < _accelerationTimerEpsilon) { _accelerationTimer = 0f; }
                 }
 
                 // Update movment speed. Values for t mean:

@@ -61,6 +61,7 @@ namespace SpaceInvaders.Gameplay
         private Enemy[,] _enemies;
         private MoveState _moveState;
         private MoveDirection _moveDirection;
+        private MoveDirection _lastHorizontalMoveDirection;
         private GridIndex _currentGridIndex;
         private GridIndex _newGridIndex;
         private float _timer;
@@ -201,6 +202,7 @@ namespace SpaceInvaders.Gameplay
             _timer = 0f;
             _moveState = MoveState.Idle;
             _moveDirection = MoveDirection.Right;
+            _lastHorizontalMoveDirection = _moveDirection;
             _currentSpeedMultiplier = WaveConfig.MinWaveSpeedMultiplier;
 
             UpdateShotDelay();
@@ -295,6 +297,10 @@ namespace SpaceInvaders.Gameplay
                 _timer -= IdleDuration;
                 _moveState = MoveState.Moving;
                 _moveDirection = GetNextMoveDirection();
+                if (_moveDirection != MoveDirection.Down)
+                {
+                    _lastHorizontalMoveDirection = _moveDirection;
+                }
                 _newGridIndex = GetTargetGridIndex();
             }
         }
@@ -351,10 +357,8 @@ namespace SpaceInvaders.Gameplay
             }
             if (_moveDirection == MoveDirection.Down)
             {
-                // TODO: Improvements can be made here. After moving down, 
-                // always move in the direction opposite of the previous horizontal direction.
-                if (canMoveRight) { return MoveDirection.Right; }
-                if (canMoveLeft) { return MoveDirection.Left; }
+                if (_lastHorizontalMoveDirection == MoveDirection.Left && canMoveRight) { return MoveDirection.Right; }
+                if (_lastHorizontalMoveDirection == MoveDirection.Right && canMoveLeft) { return MoveDirection.Left; }
             }
 
             // NOTE: Fallback, shouldn't happen.
