@@ -21,6 +21,9 @@ namespace SpaceInvaders.UI
         [SerializeField]
         private HighScoresScreen _highScoresScreen;
 
+        [SerializeField]
+        private ControlsScreen _controlsScreen;
+
         private BaseScreen _activeScreen;
 
         // Methods
@@ -42,6 +45,9 @@ namespace SpaceInvaders.UI
                     break;
                 case GameState.HighScores:
                     SetActiveScreen(_highScoresScreen);
+                    break;
+                case GameState.Controls:
+                    SetActiveScreen(_controlsScreen);
                     break;
                 default:
                     break;

@@ -33,6 +33,7 @@ namespace SpaceInvaders.UI
             gameObject.SetActive(true);
             Hide();
             OnInit();
+            UpdateControlsForCurrentPlatform();
         }
 
         // Methods
@@ -49,6 +50,7 @@ namespace SpaceInvaders.UI
         }
 
         protected virtual void OnInit() { }
+        protected virtual void UpdateControlsForCurrentPlatform() { }
         protected virtual void OnShow() { }
         protected virtual void OnHide() { }
     }

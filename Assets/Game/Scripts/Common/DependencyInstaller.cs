@@ -47,6 +47,7 @@ namespace SpaceInvaders.Common
             Container.Bind<GameplayState>().AsSingle().NonLazy();
             Container.Bind<ResultsState>().AsSingle().NonLazy();
             Container.Bind<HighScoresState>().AsSingle().NonLazy();
+            Container.Bind<ControlsState>().AsSingle().NonLazy();
 
             Container.BindFactory<Object, Projectile, Projectile.Factory>().FromFactory<PrefabFactory<Projectile>>().NonLazy();
             Container.BindFactory<Object, Player, Player.Factory>().FromFactory<PrefabFactory<Player>>().NonLazy();

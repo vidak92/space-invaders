@@ -25,7 +25,7 @@ MonoBehaviour:
     ShotCooldown: 0.5
     InvincibilityDuration: 2
     InvincibilityBlinkSpeed: 6
-    InvincibilityMinColorTint: {r: 0.42, g: 0.3696, b: 0.3696, a: 1}
+    InvincibilityMinColorTint: {r: 0.38, g: 0.2584, b: 0.30794078, a: 1}
     InvincibilityMaxColorTint: {r: 1, g: 1, b: 1, a: 1}
     StartLives: 3
     ProjectileConfig:

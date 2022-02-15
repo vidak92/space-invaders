@@ -16,6 +16,7 @@ namespace SpaceInvaders.Common
         private GameplayState _gameplayState;
         private ResultsState _resultsState;
         private HighScoresState _highScoresState;
+        private ControlsState _controlsState;
 
         private readonly int _targetFrameRate = 60;
 
@@ -31,7 +32,8 @@ namespace SpaceInvaders.Common
             MainMenuState mainMenuState,
             GameplayState gameplayState,
             ResultsState resultsState,
-            HighScoresState highScoresState)
+            HighScoresState highScoresState,
+            ControlsState controlsState)
         {
             _uiController = uiController;
 
@@ -40,6 +42,7 @@ namespace SpaceInvaders.Common
             _gameplayState = gameplayState;
             _resultsState = resultsState;
             _highScoresState = highScoresState;
+            _controlsState = controlsState;
 
             _allStates = new Dictionary<GameState, BaseState>
             {
@@ -47,7 +50,8 @@ namespace SpaceInvaders.Common
                 [GameState.MainMenu] = _mainMenuState,
                 [GameState.Gameplay] = _gameplayState,
                 [GameState.Results] = _resultsState,
-                [GameState.HighScores] = _highScoresState
+                [GameState.HighScores] = _highScoresState,
+                [GameState.Controls] = _controlsState
             };
 
             Application.targetFrameRate = _targetFrameRate;

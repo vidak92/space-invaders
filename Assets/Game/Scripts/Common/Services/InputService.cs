@@ -1,4 +1,5 @@
 using MijanTools.Common;
+using SpaceInvaders.Util;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -31,6 +32,14 @@ namespace SpaceInvaders.Common
     public class InputService
     {
         // Fields
+        private readonly KeyCode _moveLeftKeyPrimary = KeyCode.A;
+        private readonly KeyCode _moveRightKeyPrimary = KeyCode.D;
+        private readonly int _shootMouseButtonPrimary = 0; // Left mouse button.
+
+        private readonly KeyCode _moveLeftKeySecondary = KeyCode.LeftArrow;
+        private readonly KeyCode _moveRightKeySecondary = KeyCode.RightArrow;
+        private readonly KeyCode _shootKeySecondary = KeyCode.Space;
+
         private Dictionary<InputAction, bool> _actions;
 
         public InputService()
@@ -47,7 +56,14 @@ namespace SpaceInvaders.Common
         // Methods
         public PlayerInput GetPlayerInput()
         {
-            OverrideActionsForEditor();
+            if (Utils.IsCurrentPlatformEditor || Utils.IsCurrentPlatformStandalone)
+            {
+                UpdateActionsForStandalone();
+            }
+            else if (Utils.IsCurrentPlatformMobile)
+            {
+                // Do nothing, actions are updated from on-screen buttons.
+            }
 
             var moveLeftKey = GetInputAction(InputAction.MoveLeft);
             var moveRightKey = GetInputAction(InputAction.MoveRight);
@@ -75,18 +91,16 @@ namespace SpaceInvaders.Common
             return _actions.HasKey(type) ? _actions[type] : false;
         }
 
-        private void OverrideActionsForEditor()
+        private void UpdateActionsForStandalone()
         {
-#if UNITY_EDITOR || UNITY_STANDALONE
-            var moveLeftKey = Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow);
-            var moveRightKey = Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow);
+            var moveLeftKey = Input.GetKey(_moveLeftKeyPrimary) || Input.GetKey(_moveLeftKeySecondary);
+            var moveRightKey = Input.GetKey(_moveRightKeyPrimary) || Input.GetKey(_moveRightKeySecondary);
             var isPointerOverUI = EventSystem.current.IsPointerOverGameObject();
-            var shootKey = Input.GetKey(KeyCode.Space) || (!isPointerOverUI && Input.GetMouseButton(0));
+            var shootKey = Input.GetKey(_shootKeySecondary) || (!isPointerOverUI && Input.GetMouseButton(_shootMouseButtonPrimary));
 
             SetInputAction(InputAction.MoveLeft, moveLeftKey);
             SetInputAction(InputAction.MoveRight, moveRightKey);
             SetInputAction(InputAction.Shoot, shootKey);
-#endif
         }
     }
 }

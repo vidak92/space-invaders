@@ -88,6 +88,8 @@ namespace SpaceInvaders.Gameplay
         private float HorizontalCellSize => (GameplayBounds.Right - GameplayBounds.Left) / WaveConfig.MaxGridColumns;
         private float VerticalCellSize => (GameplayBounds.Top - GameplayBounds.Bottom) / WaveConfig.MaxGridRows;
 
+        public Transform UFOTransform => _ufo.transform;
+
         [Inject]
         public void Init(GameplayAssetsConfig gameplayAssetsConfig, 
             GameplayConfig gameplayConfig, 

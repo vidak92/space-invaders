@@ -409,6 +409,10 @@ PrefabInstance:
       value: 'WAVE: 1'
       objectReference: {fileID: 0}
     - target: {fileID: 6790759448302745245, guid: f3093b1d02272124983088093f557e35, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6790759448302745245, guid: f3093b1d02272124983088093f557e35, type: 3}
       propertyPath: m_VerticalAlignment
       value: 256
       objectReference: {fileID: 0}
@@ -450,7 +454,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6790759448302745247, guid: f3093b1d02272124983088093f557e35, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 60
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 6790759448302745247, guid: f3093b1d02272124983088093f557e35, type: 3}
       propertyPath: m_LocalPosition.x
@@ -534,6 +538,10 @@ PrefabInstance:
       value: 'LIVES: 1'
       objectReference: {fileID: 0}
     - target: {fileID: 6790759448302745245, guid: f3093b1d02272124983088093f557e35, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6790759448302745245, guid: f3093b1d02272124983088093f557e35, type: 3}
       propertyPath: m_VerticalAlignment
       value: 1024
       objectReference: {fileID: 0}
@@ -568,10 +576,6 @@ PrefabInstance:
     - target: {fileID: 6790759448302745247, guid: f3093b1d02272124983088093f557e35, type: 3}
       propertyPath: m_SizeDelta.x
       value: 660
-      objectReference: {fileID: 0}
-    - target: {fileID: 6790759448302745247, guid: f3093b1d02272124983088093f557e35, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 6790759448302745247, guid: f3093b1d02272124983088093f557e35, type: 3}
       propertyPath: m_LocalPosition.x
@@ -881,6 +885,10 @@ PrefabInstance:
       value: 'SCORE: 100'
       objectReference: {fileID: 0}
     - target: {fileID: 6790759448302745245, guid: f3093b1d02272124983088093f557e35, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6790759448302745245, guid: f3093b1d02272124983088093f557e35, type: 3}
       propertyPath: m_VerticalAlignment
       value: 256
       objectReference: {fileID: 0}
@@ -918,7 +926,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6790759448302745247, guid: f3093b1d02272124983088093f557e35, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 60
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 6790759448302745247, guid: f3093b1d02272124983088093f557e35, type: 3}
       propertyPath: m_LocalPosition.x

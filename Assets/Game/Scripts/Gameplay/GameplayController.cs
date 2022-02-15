@@ -67,9 +67,12 @@ namespace SpaceInvaders.Gameplay
             _player = _playerFactory.Create(_gameplayAssetsConfig.Player);
             _player.OnPlayerDied += OnPlayerDied;
             _player.SetActive(false);
+            _player.transform.parent = transform;
 
             _enemyWave = _enemyWaveFactory.Create(_gameplayAssetsConfig.EnemyWave);
             _enemyWave.transform.parent = transform;
+
+            _enemyWave.UFOTransform.parent = transform;
         }
 
         public void StartGame()

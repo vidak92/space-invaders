@@ -7,7 +7,8 @@ namespace SpaceInvaders.Common
         MainMenu,
         Gameplay,
         Results,
-        HighScores
+        HighScores,
+        Controls
     }
 
     public abstract class BaseState

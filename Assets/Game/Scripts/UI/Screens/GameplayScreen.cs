@@ -1,5 +1,6 @@
 using SpaceInvaders.Common;
 using SpaceInvaders.Gameplay;
+using SpaceInvaders.Util;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -40,6 +41,13 @@ namespace SpaceInvaders.UI
             _gameStatsController.OnGameStatsUpdated += OnGameStatsUpdated;
 
             _exitButton.onClick.AddListener(OnExitButtonClicked);
+        }
+
+        protected override void UpdateControlsForCurrentPlatform()
+        {
+            _moveLeftButton.gameObject.SetActive(Utils.IsCurrentPlatformMobile);
+            _moveRightButton.gameObject.SetActive(Utils.IsCurrentPlatformMobile);
+            _shootButton.gameObject.SetActive(Utils.IsCurrentPlatformMobile);
         }
 
         // Event Handlers

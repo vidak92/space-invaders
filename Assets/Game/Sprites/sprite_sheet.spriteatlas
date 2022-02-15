@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: sprite_sheet
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings: []
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 1
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 2800000, guid: 6233a755cce92e04991d6e2b822e8741, type: 3}
+    - {fileID: 2800000, guid: 966dec6bf7807ce409f9b0aa4d544702, type: 3}
+    - {fileID: 2800000, guid: 498202fb13809ce4aafdefab2d7e2345, type: 3}
+    - {fileID: 2800000, guid: 62c7272c36c7a264cb92328a10c49687, type: 3}
+    - {fileID: 2800000, guid: 236e4869c25a910468a93466230ff4c0, type: 3}
+    - {fileID: 2800000, guid: 0784ba7c46e000c4eb97e5fda66396db, type: 3}
+    - {fileID: 2800000, guid: 5fa9083d45b9dbe43b6506693eb4c5f5, type: 3}
+    - {fileID: 2800000, guid: 7bd8fcf53051d5e4ba0b8233a451c429, type: 3}
+    - {fileID: 2800000, guid: 688e7006be9f05344ab4e7125cf0ad6c, type: 3}
+    - {fileID: 2800000, guid: d94ef42d4bb6b7b48bb577629dec69f6, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites: []
+  m_PackedSpriteNamesToIndex: []
+  m_RenderDataMap: {}
+  m_Tag: sprite_sheet
+  m_IsVariant: 0

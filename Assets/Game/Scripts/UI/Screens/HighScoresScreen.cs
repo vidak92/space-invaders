@@ -13,12 +13,17 @@ namespace SpaceInvaders.UI
         private List<HighScoreItem> _highScoreItems = new List<HighScoreItem>();
 
         [SerializeField]
+        private GameObject _placeholderView;
+
+        [SerializeField]
         private Button _exitButton;
 
         // Overrides
         protected override void OnInit()
         {
             _exitButton.onClick.AddListener(OnExitButtonClicked);
+
+            _placeholderView.gameObject.SetActive(false);
         }
 
         protected override void OnShow()
@@ -36,6 +41,9 @@ namespace SpaceInvaders.UI
                     _highScoreItems[i].Hide();
                 }
             }
+
+            var isHighScoreListEmpty = highScoreList.Items.IsNullOrEmpty();
+            _placeholderView.gameObject.SetActive(isHighScoreListEmpty);
         }
 
         // Event Handlers
