@@ -18,12 +18,12 @@ namespace SpaceInvaders.Common
 
     public struct PlayerInput
     {
-        public float MoveDirectionY { get; }
+        public float MoveDirectionX { get; }
         public bool ShouldShoot { get; }
 
-        public PlayerInput(float moveDirectionY, bool shouldShoot)
+        public PlayerInput(float moveDirectionX, bool shouldShoot)
         {
-            MoveDirectionY = moveDirectionY;
+            MoveDirectionX = moveDirectionX;
             ShouldShoot = shouldShoot;
         }
     }

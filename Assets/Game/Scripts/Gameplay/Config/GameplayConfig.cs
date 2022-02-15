@@ -52,6 +52,9 @@ namespace SpaceInvaders.Gameplay
         [Tooltip("In units/second.")]
         public float MoveSpeed;
 
+        [Tooltip("How long it takes for the player to reach full-speed.\n\nUse 0 for instant acceleration.\n\nIn seconds.")]
+        public float AccelerationDuration;
+
         [Tooltip("Delay before the player can shoot again after firing.\n\nIn seconds.")]
         public float ShotCooldown;
         
@@ -69,6 +72,7 @@ namespace SpaceInvaders.Gameplay
         public Color InvincibilityMaxColorTint;
 
         [Space]
+        [Tooltip("Number of lives at the start of a game.\n\nEditing requires a game restart.")]
         public int StartLives;
 
         [Space]
@@ -79,6 +83,7 @@ namespace SpaceInvaders.Gameplay
             Assert.IsTrue(StartLives > 0f, Utils.GetAssertGreaterThanMessage(this.GetType(), nameof(StartLives), 0f));
 
             Assert.IsTrue(MoveSpeed > 0f, Utils.GetAssertGreaterThanMessage(this.GetType(), nameof(MoveSpeed), 0f));
+            Assert.IsTrue(AccelerationDuration >= 0f, Utils.GetAssertGreaterThanOrEqualMessage(this.GetType(), nameof(AccelerationDuration), 0f));
             Assert.IsTrue(ShotCooldown > 0f, Utils.GetAssertGreaterThanMessage(this.GetType(), nameof(ShotCooldown), 0f));
             Assert.IsTrue(InvincibilityDuration > 0f, Utils.GetAssertGreaterThanMessage(this.GetType(), nameof(InvincibilityDuration), 0f));
             Assert.IsTrue(InvincibilityBlinkSpeed > 0f, Utils.GetAssertGreaterThanMessage(this.GetType(), nameof(InvincibilityBlinkSpeed), 0f));
@@ -169,7 +174,7 @@ namespace SpaceInvaders.Gameplay
                     return scoreValue.Points;
                 }
             }
-            // Fallback, shouldn't happen.
+            // NOTE: Fallback, shouldn't happen.
             return 0;
         }
 

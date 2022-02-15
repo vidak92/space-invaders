@@ -1,7 +1,6 @@
 using MijanTools.Common;
 using MijanTools.Components;
 using SpaceInvaders.Common;
-using SpaceInvaders.Util;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,7 +19,10 @@ namespace SpaceInvaders.Gameplay
         private ObjectPool<Projectile> _projectilePool;
         private GameStatsController _gameStatsController;
 
-        private float _speedX;
+        private float _moveSpeedX;
+        private float _accelerationTimer;
+        private readonly float _moveSpeedEpsilon = 0.032f;
+        
         private float _shotCooldownTimer;
 
         private bool _isInvincible;
@@ -61,10 +63,11 @@ namespace SpaceInvaders.Gameplay
         // Overrides
         public override void ResetState()
         {
-            ResetPosition();
+            transform.position = new Vector3(0f, 0f, GameplayBounds.Bottom);
             ResetColor();
 
-            _speedX = 0f;
+            _moveSpeedX = 0f;
+            _accelerationTimer = 0f;
             _shotCooldownTimer = 0f;
 
             _isInvincible = false;
@@ -86,11 +89,67 @@ namespace SpaceInvaders.Gameplay
         public void OnUpdate(PlayerInput playerInput)
         {
             var dt = Time.deltaTime;
-            var targetSpeedX = playerInput.MoveDirectionY * PlayerConfig.MoveSpeed * dt;
-            _speedX = targetSpeedX;
-            transform.AddPositionX(_speedX);
+
+            // Move Update
+            if (PlayerConfig.AccelerationDuration > 0f)
+            {
+                // Accelerate/decelrate.
+                if (playerInput.MoveDirectionX > 0f)
+                {
+                    // Moving right.
+                    if (_accelerationTimer < PlayerConfig.AccelerationDuration)
+                    {
+                        _accelerationTimer += dt;
+                    }
+                }
+                else if (playerInput.MoveDirectionX < 0f)
+                {
+                    // Moving left.
+                    if (_accelerationTimer > -PlayerConfig.AccelerationDuration)
+                    {
+                        _accelerationTimer -= dt;
+                    }
+                }
+                else
+                {
+                    // Not moving.
+                    if (_accelerationTimer < 0f)
+                    {
+                        _accelerationTimer += dt;
+                    }
+                    else
+                    {
+                        _accelerationTimer -= dt;
+                    }
+
+                    // Clamp velocity if it's close to 0 and there's no input.
+                    if (Mathf.Abs(_accelerationTimer) < _moveSpeedEpsilon) { _accelerationTimer = 0f; }
+                }
+
+                // Update movment speed. Values for t mean:
+                // -1: Full-speed left.
+                // 1: Full-speed right.
+                // 0: No movement.
+                var t = Mathf.Clamp(_accelerationTimer / PlayerConfig.AccelerationDuration, -1f, 1f);
+
+                // Convert t to [0, 1] range.
+                t = (t + 1f) / 2f;
+
+                // Lerp speed based on t.
+                var maxSpeedX = PlayerConfig.MoveSpeed * dt;
+                _moveSpeedX = Mathf.Lerp(-maxSpeedX, maxSpeedX, t);
+            }
+            else
+            {
+                // Change speed instantly.
+                var targetSpeedX = playerInput.MoveDirectionX * PlayerConfig.MoveSpeed * dt;
+                _moveSpeedX = targetSpeedX;
+            }
+            
+            transform.AddPositionX(_moveSpeedX);
             transform.ClampPositionX(GameplayBounds.Left, GameplayBounds.Right);
 
+            // Shot Update
             if (_shotCooldownTimer > 0f)
             {
                 _shotCooldownTimer -= dt;
@@ -103,6 +162,7 @@ namespace SpaceInvaders.Gameplay
                 projectile.Init(_gameplayConfig, _gameplayConfig.PlayerConfig.ProjectileConfig, transform.position);
             }
 
+            // Invincibility Update
             if (_isInvincible)
             {
                 var multiplier = Mathf.Cos(Time.time * PlayerConfig.InvincibilityBlinkSpeed);
@@ -118,11 +178,6 @@ namespace SpaceInvaders.Gameplay
                     ResetColor();
                 }
             }
-        }
-
-        public void ResetPosition()
-        {
-            transform.position = new Vector3(0f, 0f, GameplayBounds.Bottom);
         }
 
         private void ResetColor()

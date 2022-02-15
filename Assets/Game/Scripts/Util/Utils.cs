@@ -18,5 +18,10 @@ namespace SpaceInvaders.Util
         {
             return $"{objectType}: {name} must be greater than {value}.";
         }
+
+        public static string GetAssertGreaterThanOrEqualMessage(Type objectType, string name, float value)
+        {
+            return $"{objectType}: {name} must be greater than or equal to {value}.";
+        }
     }
 }

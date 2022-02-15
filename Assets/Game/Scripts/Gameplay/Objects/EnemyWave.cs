@@ -349,11 +349,13 @@ namespace SpaceInvaders.Gameplay
             }
             if (_moveDirection == MoveDirection.Down)
             {
+                // TODO: Improvements can be made here. After moving down, 
+                // always move in the direction opposite of the previous horizontal direction.
                 if (canMoveRight) { return MoveDirection.Right; }
                 if (canMoveLeft) { return MoveDirection.Left; }
             }
 
-            // Fallback, shouldn't happen.
+            // NOTE: Fallback, shouldn't happen.
             return _moveDirection;
         }
 

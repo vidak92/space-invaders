@@ -26,7 +26,7 @@ namespace SpaceInvaders.Gameplay
                 case EnemyType.UFO:
                     return UFO;
                 default:
-                    // Fallback, shouldn't happen.
+                    // NOTE: Fallback, shouldn't happen.
                     return Enemy1;
             }
         }

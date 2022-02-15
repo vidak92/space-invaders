@@ -21,6 +21,7 @@ MonoBehaviour:
     Top: 12
   PlayerConfig:
     MoveSpeed: 20
+    AccelerationDuration: 0.1
     ShotCooldown: 0.5
     InvincibilityDuration: 2
     InvincibilityBlinkSpeed: 6
