@@ -3,7 +3,7 @@ This is a sample game project created with [Unity](https://unity.com/). It's a s
 
 The game is pretty simple, but the project's been set up as for a bigger game. Think of this as a *small scale model* of a bigger project.
 
-<img src="https://i.imgur.com/UVuMsDG.gif" width="480" />
+<img src="GIFs/space_invaders.gif" width="480" />
 
 
 ## Features
