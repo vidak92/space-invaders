@@ -40,7 +40,7 @@ The project uses *dependency injection*(via Zenject) and a *state machine* for h
 
 ## Roadmap
 - ~~**v 0.1**~~
-	- ~~Basic game implemented.~~
+	- ~~Implement basic game.~~
 	- ~~Support for desktop and mobile platforms.~~
 - **v 0.2**
     - Explosion particle effects for the player and enemies.
