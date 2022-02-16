@@ -1,4 +1,4 @@
-namespace SpaceInvaders.Gameplay
+namespace SpaceInvaders.Gameplay.Interfaces
 {
     public interface IHittable
     {

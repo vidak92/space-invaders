@@ -1,7 +1,8 @@
 using MijanTools.Common;
+using SpaceInvaders.Gameplay.Config;
 using UnityEngine;
 
-namespace SpaceInvaders.Gameplay
+namespace SpaceInvaders.Gameplay.Objects
 {
     public class EnemyUFO : Enemy
     {

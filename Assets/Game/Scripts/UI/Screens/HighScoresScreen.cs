@@ -1,10 +1,11 @@
 using MijanTools.Common;
-using SpaceInvaders.Common;
+using SpaceInvaders.Common.State;
+using SpaceInvaders.UI.Controls;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace SpaceInvaders.UI
+namespace SpaceInvaders.UI.Screens
 {
     public class HighScoresScreen : BaseScreen
     {

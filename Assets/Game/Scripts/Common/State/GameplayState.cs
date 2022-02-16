@@ -1,6 +1,6 @@
 using SpaceInvaders.Gameplay;
 
-namespace SpaceInvaders.Common
+namespace SpaceInvaders.Common.State
 {
     public class GameplayState : BaseState
     {

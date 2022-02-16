@@ -1,11 +1,13 @@
-using SpaceInvaders.Common;
-using SpaceInvaders.Gameplay;
+using SpaceInvaders.Common.State;
+using SpaceInvaders.Gameplay.Config;
+using SpaceInvaders.Gameplay.Objects;
+using SpaceInvaders.UI.Controls;
 using SpaceInvaders.Util;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace SpaceInvaders.UI
+namespace SpaceInvaders.UI.Screens
 {
     public class MainMenuScreen : BaseScreen
     {

@@ -1,5 +1,9 @@
 using MijanTools.Components;
 using SpaceInvaders.Common;
+using SpaceInvaders.Common.Services;
+using SpaceInvaders.Common.State;
+using SpaceInvaders.Gameplay.Config;
+using SpaceInvaders.Gameplay.Objects;
 using UnityEngine;
 using Zenject;
 

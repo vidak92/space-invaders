@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace SpaceInvaders.Common
+namespace SpaceInvaders.Common.Services
 {
     // Structs
     [Serializable]

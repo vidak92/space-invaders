@@ -1,9 +1,10 @@
 using SpaceInvaders.Common;
+using SpaceInvaders.Common.Services;
 using SpaceInvaders.Gameplay;
 using UnityEngine;
 using Zenject;
 
-namespace SpaceInvaders.UI
+namespace SpaceInvaders.UI.Screens
 {
     public class BaseScreen : MonoBehaviour
     {

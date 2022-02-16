@@ -1,4 +1,4 @@
-namespace SpaceInvaders.Common
+namespace SpaceInvaders.Common.State
 {
     public class HighScoresState : BaseState
     {

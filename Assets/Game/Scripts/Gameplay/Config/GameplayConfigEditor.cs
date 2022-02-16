@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEditor;
 
-namespace SpaceInvaders.Gameplay
+namespace SpaceInvaders.Gameplay.Config
 {
     [CustomEditor(typeof(GameplayConfig))]
     public class GameplayConfigEditor : Editor

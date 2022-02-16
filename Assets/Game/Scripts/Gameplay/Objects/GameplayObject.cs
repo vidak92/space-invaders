@@ -1,6 +1,7 @@
+using SpaceInvaders.Gameplay.Config;
 using UnityEngine;
 
-namespace SpaceInvaders.Gameplay
+namespace SpaceInvaders.Gameplay.Objects
 {
     public class GameplayObject : MonoBehaviour
     {

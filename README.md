@@ -36,7 +36,7 @@ Code is generally split in the following types of classes:
 - `UIController` and `XXXScreen`: Used for handling UI logic.
 - The rest are gameplay-related(`Player`, `Enemy`, etc.) or utility-style classes.
 
-The project uses dependency injection(via Zenject) and a *state machine* for handling the high-level game state.
+The project uses *dependency injection*(via Zenject) and a *state machine* for handling the high-level game state.
 
 ## Roadmap
 - ~~**v 0.1**~~
@@ -48,3 +48,6 @@ The project uses dependency injection(via Zenject) and a *state machine* for han
     - Sound effects.
 - **v 0.3+**
     - Destructable bunkers/barricades.
+
+## Credits
+- The 3D models used in the game are from [Kenney's Space Kit](https://www.kenney.nl/assets/space-kit).

@@ -1,9 +1,9 @@
-using SpaceInvaders.Common;
+using SpaceInvaders.Common.Services;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace SpaceInvaders.UI
+namespace SpaceInvaders.UI.Controls
 {
     public class OnScreenButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {

@@ -1,11 +1,12 @@
-using SpaceInvaders.Common;
+using SpaceInvaders.Common.State;
 using SpaceInvaders.Gameplay;
+using SpaceInvaders.UI.Controls;
 using SpaceInvaders.Util;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace SpaceInvaders.UI
+namespace SpaceInvaders.UI.Screens
 {
     public class GameplayScreen : BaseScreen
     {

@@ -1,8 +1,8 @@
-using SpaceInvaders.Common;
+using SpaceInvaders.Common.State;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace SpaceInvaders.UI
+namespace SpaceInvaders.UI.Screens
 {
     public class ControlsScreen : BaseScreen
     {

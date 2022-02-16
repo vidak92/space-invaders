@@ -1,9 +1,10 @@
 using MijanTools.Components;
+using SpaceInvaders.Gameplay.Config;
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
-namespace SpaceInvaders.Gameplay
+namespace SpaceInvaders.Gameplay.Objects
 {
     // Structs
     public enum MoveState

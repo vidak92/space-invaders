@@ -1,10 +1,11 @@
+using SpaceInvaders.Gameplay.Objects;
 using SpaceInvaders.Util;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-namespace SpaceInvaders.Gameplay
+namespace SpaceInvaders.Gameplay.Config
 {
     public interface IValidatable
     {

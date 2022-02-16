@@ -1,3 +1,5 @@
+using SpaceInvaders.Gameplay.Config;
+using SpaceInvaders.Gameplay.Objects;
 using System;
 
 namespace SpaceInvaders.Gameplay

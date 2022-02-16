@@ -1,10 +1,12 @@
 using MijanTools.Common;
 using MijanTools.Components;
+using SpaceInvaders.Gameplay.Config;
+using SpaceInvaders.Gameplay.Interfaces;
 using System;
 using UnityEngine;
 using Zenject;
 
-namespace SpaceInvaders.Gameplay
+namespace SpaceInvaders.Gameplay.Objects
 {
     // Structs
     [Serializable]

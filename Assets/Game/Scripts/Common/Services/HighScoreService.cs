@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SpaceInvaders.Common
+namespace SpaceInvaders.Common.Services
 {
     // Structs
     [Serializable]

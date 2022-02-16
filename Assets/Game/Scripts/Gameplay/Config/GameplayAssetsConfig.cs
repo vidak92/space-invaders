@@ -1,6 +1,7 @@
+using SpaceInvaders.Gameplay.Objects;
 using UnityEngine;
 
-namespace SpaceInvaders.Gameplay
+namespace SpaceInvaders.Gameplay.Config
 {
     [CreateAssetMenu(menuName = "Config/Gameplay Assets Config")]
     public class GameplayAssetsConfig : ScriptableObject
