@@ -1,8 +1,6 @@
 # Space Invaders
 This is a sample game project created with [Unity](https://unity.com/). It's a simplified version of the classic [Space Invaders](https://en.wikipedia.org/wiki/Space_Invaders) game.
 
-The game is pretty simple, but the project's been set up as for a bigger game. Think of this as a *small scale model* of a bigger project.
-
 <img src="GIFs/space_invaders.gif" width="480" />
 
 
@@ -36,8 +34,6 @@ Code is generally split in the following types of classes:
 - `UIController` and `XXXScreen`: Used for handling UI logic.
 - The rest are gameplay-related(`Player`, `Enemy`, etc.) or utility-style classes.
 
-The project uses *dependency injection*(via Zenject) and a *state machine* for handling the high-level game state.
-
 ## Roadmap
 - ~~**v 0.1**~~
 	- ~~Implement basic game.~~
@@ -46,6 +42,8 @@ The project uses *dependency injection*(via Zenject) and a *state machine* for h
     - Explosion particle effects for the player and enemies.
     - Background particle effects.
     - Sound effects.
+    - Localization support.
+    - Asynchronous screen/scene transitions.
 - **v 0.3+**
     - Destructable bunkers/barricades.
 
