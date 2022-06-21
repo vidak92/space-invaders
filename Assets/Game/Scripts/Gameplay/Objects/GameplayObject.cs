@@ -1,20 +1,21 @@
 using SpaceInvaders.Gameplay.Config;
 using UnityEngine;
+using Zenject;
 
 namespace SpaceInvaders.Gameplay.Objects
 {
     public class GameplayObject : MonoBehaviour
     {
         // Fields
+        [Inject]
         protected GameplayConfig _gameplayConfig;
 
         // Properties
         public bool IsActive => gameObject.activeSelf;
 
-        protected void Init(GameplayConfig gameplayConfig)
+        [Inject]
+        protected virtual void Init()
         {
-            _gameplayConfig = gameplayConfig;
-
             ResetState();
         }
 

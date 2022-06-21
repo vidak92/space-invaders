@@ -11,26 +11,21 @@ namespace SpaceInvaders.UI.Screens
         // Event Handlers
         [SerializeField]
         protected GameObject _container;
-        
+
+        [Inject]
         protected UIController _uiController;
+        [Inject]
         protected AppController _appController;
+        [Inject]
         protected InputService _inputService;
+        [Inject]
         protected GameStatsController _gameStatsController;
+        [Inject]
         protected HighScoreService _highScoreService;
 
         [Inject]
-        public virtual void Init(UIController uiController, 
-            AppController appController, 
-            InputService inputService, 
-            GameStatsController gameStatsController,
-            HighScoreService highScoreService)
+        public virtual void Init()
         {
-            _uiController = uiController;
-            _appController = appController;
-            _inputService = inputService;
-            _gameStatsController = gameStatsController;
-            _highScoreService = highScoreService;
-
             gameObject.SetActive(true);
             Hide();
             OnInit();

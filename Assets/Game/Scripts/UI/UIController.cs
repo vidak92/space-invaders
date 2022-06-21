@@ -32,13 +32,12 @@ namespace SpaceInvaders.UI
 
         private BaseScreen _activeScreen;
 
+        [Inject]
         private Camera _camera;
 
         [Inject]
-        private void Init(Camera camera)
+        private void Init()
         {
-            _camera = camera;
-
             _canvas.worldCamera = _camera;
             _canvas.sortingLayerName = SortingLayers.Overlay;
         }

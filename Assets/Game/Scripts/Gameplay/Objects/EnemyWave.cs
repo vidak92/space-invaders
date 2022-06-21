@@ -53,10 +53,15 @@ namespace SpaceInvaders.Gameplay.Objects
         public class Factory : PlaceholderFactory<UnityEngine.Object, EnemyWave> { }
 
         // Fields
+        [Inject]
         private GameplayAssetsConfig _gameplayAssetsConfig;
+        [Inject]
         private GameplayConfig _gameplayConfig;
+        [Inject]
         private ObjectPool<Projectile> _projectilePool;
+        [Inject]
         private GameStatsController _gameStatsController;
+        [Inject]
         private Enemy.Factory _enemyFactory;
 
         private Enemy[,] _enemies;
@@ -93,18 +98,8 @@ namespace SpaceInvaders.Gameplay.Objects
         public Transform UFOTransform => _ufo.transform;
 
         [Inject]
-        public void Init(GameplayAssetsConfig gameplayAssetsConfig, 
-            GameplayConfig gameplayConfig, 
-            ObjectPool<Projectile> projectilePool, 
-            GameStatsController gameStatsController,
-            Enemy.Factory enemyFactory)
+        public void Init()
         {
-            _gameplayAssetsConfig = gameplayAssetsConfig;
-            _gameplayConfig = gameplayConfig;
-            _projectilePool = projectilePool;
-            _gameStatsController = gameStatsController;
-            _enemyFactory = enemyFactory;
-
             _enemies = new Enemy[ColumnCount, RowCount];
             for (int r = 0; r < RowCount; r++)
             {

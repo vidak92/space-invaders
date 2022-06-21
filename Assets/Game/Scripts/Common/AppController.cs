@@ -10,13 +10,20 @@ namespace SpaceInvaders.Common
     public class AppController : MonoBehaviour
     {
         // Fields
+        [Inject]
         private UIController _uiController;
 
+        [Inject]
         private LoadingState _loadingState;
+        [Inject]
         private MainMenuState _mainMenuState;
+        [Inject]
         private GameplayState _gameplayState;
+        [Inject]
         private ResultsState _resultsState;
+        [Inject]
         private HighScoresState _highScoresState;
+        [Inject]
         private ControlsState _controlsState;
 
         private readonly int _targetFrameRate = 60;
@@ -28,23 +35,8 @@ namespace SpaceInvaders.Common
         private BaseState CurrentState => _allStates.HasKey(_currentState) ? _allStates[_currentState] : null;
 
         [Inject]
-        private void Init(UIController uiController,
-            LoadingState loadingState,
-            MainMenuState mainMenuState,
-            GameplayState gameplayState,
-            ResultsState resultsState,
-            HighScoresState highScoresState,
-            ControlsState controlsState)
+        private void Init()
         {
-            _uiController = uiController;
-
-            _loadingState = loadingState;
-            _mainMenuState = mainMenuState;
-            _gameplayState = gameplayState;
-            _resultsState = resultsState;
-            _highScoresState = highScoresState;
-            _controlsState = controlsState;
-
             _allStates = new Dictionary<GameState, BaseState>
             {
                 [GameState.Loading] = _loadingState,

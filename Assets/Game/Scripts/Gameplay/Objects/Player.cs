@@ -18,7 +18,9 @@ namespace SpaceInvaders.Gameplay.Objects
         [SerializeField]
         private MeshRenderer _meshRenderer;
 
+        [Inject]
         private ObjectPool<Projectile> _projectilePool;
+        [Inject]
         private GameStatsController _gameStatsController;
 
         private float _moveSpeedX;
@@ -39,12 +41,9 @@ namespace SpaceInvaders.Gameplay.Objects
         public Action OnPlayerDied { get; set; }
         
         [Inject]
-        private void Init(GameplayConfig gameplayConfig, ObjectPool<Projectile> projectilePool, GameStatsController gameStatsController)
+        protected override void Init()
         {
-            base.Init(gameplayConfig);
-
-            _projectilePool = projectilePool;
-            _gameStatsController = gameStatsController;
+            base.Init();
 
             ResetState();
             InitMaterialColors();
@@ -161,7 +160,7 @@ namespace SpaceInvaders.Gameplay.Objects
             {
                 _shotCooldownTimer = PlayerConfig.ShotCooldown;
                 var projectile = _projectilePool.Get();
-                projectile.Init(_gameplayConfig, _gameplayConfig.PlayerConfig.ProjectileConfig, transform.position);
+                projectile.Init(_gameplayConfig, PlayerConfig.ProjectileConfig, transform.position);
             }
 
             // Invincibility Update

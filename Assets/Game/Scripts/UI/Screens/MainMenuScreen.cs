@@ -27,13 +27,8 @@ namespace SpaceInvaders.UI.Screens
         [SerializeField]
         private Button _controlsButton;
 
-        private GameplayConfig _gameplayConfig;
-
         [Inject]
-        public void InitGameplayConfig(GameplayConfig gameplayConfig)
-        {
-            _gameplayConfig = gameplayConfig;
-        }
+        private GameplayConfig _gameplayConfig;
 
         // Overrides
         protected override void OnInit()

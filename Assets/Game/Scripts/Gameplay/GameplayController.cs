@@ -12,46 +12,36 @@ namespace SpaceInvaders.Gameplay
     public class GameplayController : MonoBehaviour
     {
         // Fields
+        [Inject]
         private AppController _appController;
+        [Inject]
         private GameplayConfig _gameplayConfig;
+        [Inject]
         private GameplayAssetsConfig _gameplayAssetsConfig;
 
+        [Inject]
         private InputService _inputService;
+        [Inject]
         private HighScoreService _highScoreService;
+        [Inject]
         private GameStatsController _gameStatsController;
+        [Inject]
         private Camera _camera;
-        
+
+        [Inject]
         private Player.Factory _playerFactory;
+        [Inject]
         private EnemyWave.Factory _enemyWaveFactory;
+        [Inject]
         private ObjectPool<Projectile> _projectilePool;
-        
+
         private Player _player;
         private EnemyWave _enemyWave;
         private float _resultsScreenTimer;
 
         [Inject]
-        private void Init(AppController appController,
-            GameplayConfig gameplayConfig, 
-            GameplayAssetsConfig gameplayAssetsConfig,
-            InputService inputService, 
-            HighScoreService highScoreService,
-            GameStatsController gameStatsController,
-            Camera camera,
-            ObjectPool<Projectile> projectilePool,
-            Player.Factory playerFactory,
-            EnemyWave.Factory enemyWaveFactory)
+        private void Init()
         {
-            _appController = appController;
-            _gameplayConfig = gameplayConfig;
-            _gameplayAssetsConfig = gameplayAssetsConfig;
-            _inputService = inputService;
-            _highScoreService = highScoreService;
-            _gameStatsController = gameStatsController;
-            _camera = camera;
-            _projectilePool = projectilePool;
-            _playerFactory = playerFactory;
-            _enemyWaveFactory = enemyWaveFactory;
-
             UpdateCameraSize();
             SetupPrefabs();
         }

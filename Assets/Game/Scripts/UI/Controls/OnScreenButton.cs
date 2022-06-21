@@ -2,6 +2,7 @@ using SpaceInvaders.Common.Services;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Zenject;
 
 namespace SpaceInvaders.UI.Controls
 {
@@ -25,12 +26,8 @@ namespace SpaceInvaders.UI.Controls
         [SerializeField]
         private Color _pressedColor;
 
+        [Inject]
         private InputService _inputService;
-
-        public void Init(InputService inputService)
-        {
-            _inputService = inputService;
-        }
 
         // Unity Events
         private void Update()

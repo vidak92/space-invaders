@@ -1,4 +1,3 @@
-using SpaceInvaders.Gameplay.Config;
 using SpaceInvaders.Gameplay.Interfaces;
 using System;
 using UnityEngine;
@@ -24,15 +23,8 @@ namespace SpaceInvaders.Gameplay.Objects
         [SerializeField]
         private EnemyType _type;
 
-        protected GameStatsController _gameStatsController;
-
         [Inject]
-        public void Init(GameplayConfig gameplayConfig, GameStatsController gameStatsController)
-        {
-            base.Init(gameplayConfig);
-
-            _gameStatsController = gameStatsController;
-        }
+        protected GameStatsController _gameStatsController;
 
         // IShootable
         public void TakeDamage()

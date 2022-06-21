@@ -35,10 +35,6 @@ namespace SpaceInvaders.UI.Screens
         // Overrides
         protected override void OnInit()
         {
-            _moveLeftButton.Init(_inputService);
-            _moveRightButton.Init(_inputService);
-            _shootButton.Init(_inputService);
-
             _gameStatsController.OnGameStatsUpdated += OnGameStatsUpdated;
 
             _exitButton.onClick.AddListener(OnExitButtonClicked);

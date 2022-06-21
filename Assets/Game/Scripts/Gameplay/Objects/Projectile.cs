@@ -22,6 +22,7 @@ namespace SpaceInvaders.Gameplay.Objects
 
         // Fields
         private GameplayConfig _gameplayConfig;
+
         private ProjectileConfig _projectileConfig;
 
         private Vector3 _direction;
@@ -33,7 +34,7 @@ namespace SpaceInvaders.Gameplay.Objects
         {
             _gameplayConfig = gameplayConfig;
             _projectileConfig = projectileConfig;
-
+            
             var directionZ = _projectileConfig.Direction == ProjectileDirection.Up ? 1f : -1f;
             _direction = Vector3.forward * directionZ;
 

@@ -1,6 +1,7 @@
 using SpaceInvaders.Gameplay.Config;
 using SpaceInvaders.Gameplay.Objects;
 using System;
+using Zenject;
 
 namespace SpaceInvaders.Gameplay
 {
@@ -19,9 +20,10 @@ namespace SpaceInvaders.Gameplay
         }
     }
 
-    public class GameStatsController
+    public class GameStatsController: IInitializable
     {
         // Fields
+        [Inject]
         private GameplayConfig _gameplayConfig;
 
         private GameStats _gameStats;
@@ -32,10 +34,8 @@ namespace SpaceInvaders.Gameplay
 
         public GameStats CurrentStats => _gameStats;
 
-        public GameStatsController(GameplayConfig gameplayConfig)
+        public void Initialize()
         {
-            _gameplayConfig = gameplayConfig;
-
             ResetStats();
         }
 
