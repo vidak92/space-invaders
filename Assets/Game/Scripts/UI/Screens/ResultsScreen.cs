@@ -1,13 +1,11 @@
-using SpaceInvaders.Common.State;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace SpaceInvaders.UI.Screens
+namespace SpaceInvaders
 {
     public class ResultsScreen : BaseScreen
     {
-        // Fields
         [SerializeField]
         private TMP_Text _scoreResultText;
 
@@ -17,23 +15,21 @@ namespace SpaceInvaders.UI.Screens
         [SerializeField]
         private Button _exitButton;
 
-        // Overrides
         protected override void OnInit()
         {
             _exitButton.onClick.AddListener(OnExitButtonClicked);
         }
 
-        protected override void OnShow()
+        // @TODO invoke
+        public void SetStats(int score, int wave)
         {
-            var gameStats = _gameStatsController.CurrentStats;
-            _scoreResultText.text = gameStats.Score.ToString();
-            _waveResultText.text = gameStats.Wave.ToString();
+            _scoreResultText.text = score.ToString();
+            _waveResultText.text = wave.ToString();
         }
 
-        // Event Handlers
         private void OnExitButtonClicked()
         {
-            _appController.SetState(GameState.MainMenu);
+            GameController.SetState(GameState.MainMenu);
         }
     }
 }

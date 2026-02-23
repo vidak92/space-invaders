@@ -1,17 +1,11 @@
-using SpaceInvaders.Common.State;
-using SpaceInvaders.Gameplay.Config;
-using SpaceInvaders.Gameplay.Objects;
-using SpaceInvaders.UI.Controls;
-using SpaceInvaders.Util;
 using UnityEngine;
 using UnityEngine.UI;
-using Zenject;
 
-namespace SpaceInvaders.UI.Screens
+namespace SpaceInvaders
 {
     public class MainMenuScreen : BaseScreen
     {
-        // Fields
+        // @TODO convert to public
         [SerializeField]
         private Button _exitButton;
 
@@ -26,11 +20,7 @@ namespace SpaceInvaders.UI.Screens
 
         [SerializeField]
         private Button _controlsButton;
-
-        [Inject]
-        private GameplayConfig _gameplayConfig;
-
-        // Overrides
+        
         protected override void OnInit()
         {
             _exitButton.onClick.AddListener(OnExitButtonClicked);
@@ -49,7 +39,7 @@ namespace SpaceInvaders.UI.Screens
                 }
                 else
                 {
-                    var pointsValue = _gameplayConfig.EnemiesConfig.GetScoreValueForEnemyType(scoreInfoItem.EnemyType);
+                    var pointsValue = GameplayConfig.EnemiesConfig.GetScoreValueForEnemyType(scoreInfoItem.EnemyType);
                     scoreInfoItem.SetPointsValue(pointsValue);
                 }
             }
@@ -57,8 +47,9 @@ namespace SpaceInvaders.UI.Screens
 
         protected override void UpdateControlsForCurrentPlatform()
         {
-            _exitButton.gameObject.SetActive(Utils.IsCurrentPlatformStandalone);
-            _controlsButton.gameObject.SetActive(Utils.IsCurrentPlatformStandalone);
+            // @TODO for mobile
+            _exitButton.gameObject.SetActive(false);
+            _controlsButton.gameObject.SetActive(false);
         }
 
         // Event Handlers
@@ -69,17 +60,17 @@ namespace SpaceInvaders.UI.Screens
 
         private void OnPlayButtonClicked()
         {
-            _appController.SetState(GameState.Gameplay);
+            GameController.SetState(GameState.Gameplay);
         }
 
         private void OnHighScoresButtonClicked()
         {
-            _appController.SetState(GameState.HighScores);
+            GameController.SetState(GameState.HighScores);
         }
 
         private void OnControlsButtonClicked()
         {
-            _appController.SetState(GameState.Controls);
+            GameController.SetState(GameState.Controls);
         }
     }
 }

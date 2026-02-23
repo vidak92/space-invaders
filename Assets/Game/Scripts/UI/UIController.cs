@@ -1,83 +1,44 @@
-using SpaceInvaders.Common.State;
-using SpaceInvaders.UI.Screens;
-using SpaceInvaders.Util;
 using UnityEngine;
-using Zenject;
 
-namespace SpaceInvaders.UI
+namespace SpaceInvaders
 {
     public class UIController : MonoBehaviour
     {
-        // Fields
-        [SerializeField]
-        private Canvas _canvas;
-
-        [SerializeField]
-        private LoadingScreen _loadingScreen;
+        public Canvas Canvas;
         
-        [SerializeField]
-        private MainMenuScreen _mainMenuScreen;
-        
-        [SerializeField]
-        private GameplayScreen _gameplayScreen;
-        
-        [SerializeField]
-        private ResultsScreen _resultsScreen;
-        
-        [SerializeField]
-        private HighScoresScreen _highScoresScreen;
+        public LoadingScreen LoadingScreen;
+        public MainMenuScreen MainMenuScreen;
+        public GameplayScreen GameplayScreen;
+        public ResultsScreen ResultsScreen;
+        public HighScoresScreen HighScoresScreen;
+        public ControlsScreen ControlsScreen;
 
-        [SerializeField]
-        private ControlsScreen _controlsScreen;
+        public BaseScreen ActiveScreen { get; private set; }
 
-        private BaseScreen _activeScreen;
-
-        [Inject]
-        private Camera _camera;
-
-        [Inject]
-        private void Init()
+        public void Init()
         {
-            _canvas.worldCamera = _camera;
-            _canvas.sortingLayerName = SortingLayers.Overlay;
+            Canvas.worldCamera = Camera.main;
+            Canvas.sortingLayerName = SortingLayers.Overlay;
+
+            LoadingScreen.Init();
+            MainMenuScreen.Init();
+            GameplayScreen.Init();
+            ResultsScreen.Init();
+            HighScoresScreen.Init();
+            ControlsScreen.Hide();
         }
 
-        // Methods
-        public void SetState(GameState gameState)
+        public void SetActiveScreen(BaseScreen screen)
         {
-            switch (gameState)
+            if (ActiveScreen != null)
             {
-                case GameState.Loading:
-                    SetActiveScreen(_loadingScreen);
-                    break;
-                case GameState.MainMenu:
-                    SetActiveScreen(_mainMenuScreen);
-                    break;
-                case GameState.Gameplay:
-                    SetActiveScreen(_gameplayScreen);
-                    break;
-                case GameState.Results:
-                    SetActiveScreen(_resultsScreen);
-                    break;
-                case GameState.HighScores:
-                    SetActiveScreen(_highScoresScreen);
-                    break;
-                case GameState.Controls:
-                    SetActiveScreen(_controlsScreen);
-                    break;
-                default:
-                    break;
+                ActiveScreen.Hide();
             }
-        }
-
-        private void SetActiveScreen(BaseScreen screen)
-        {
-            if (_activeScreen != null)
+            ActiveScreen = screen;
+            if (ActiveScreen != null)
             {
-                _activeScreen.Hide();
+                ActiveScreen.Show();
             }
-            _activeScreen = screen;
-            _activeScreen.Show();
         }
     }
 }

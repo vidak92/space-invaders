@@ -1,29 +1,15 @@
-using SpaceInvaders.Common;
-using SpaceInvaders.Common.Services;
-using SpaceInvaders.Gameplay;
 using UnityEngine;
-using Zenject;
 
-namespace SpaceInvaders.UI.Screens
+namespace SpaceInvaders
 {
     public class BaseScreen : MonoBehaviour
     {
-        // Event Handlers
-        [SerializeField]
-        protected GameObject _container;
-
-        [Inject]
-        protected UIController _uiController;
-        [Inject]
-        protected AppController _appController;
-        [Inject]
-        protected InputService _inputService;
-        [Inject]
-        protected GameStatsController _gameStatsController;
-        [Inject]
-        protected HighScoreService _highScoreService;
-
-        [Inject]
+        protected GameController GameController => GameController.Instance;
+        protected UIController UIController => GameController.UIController;
+        protected InputController InputController => GameController.InputController;
+        protected HighScoreService HighScoreService => GameController.HighScoreService;
+        protected GameplayConfig GameplayConfig => GameController.GameplayConfig;
+        
         public virtual void Init()
         {
             gameObject.SetActive(true);
@@ -32,16 +18,15 @@ namespace SpaceInvaders.UI.Screens
             UpdateControlsForCurrentPlatform();
         }
 
-        // Methods
         public void Show()
         {
-            _container.SetActive(true);
+            gameObject.SetActive(true);
             OnShow();
         }
 
         public void Hide()
         {
-            _container.SetActive(false);
+            gameObject.SetActive(false);
             OnHide();
         }
 

@@ -1,10 +1,8 @@
-using SpaceInvaders.Common.Services;
-using SpaceInvaders.Util;
 using System;
 using TMPro;
 using UnityEngine;
 
-namespace SpaceInvaders.UI.Controls
+namespace SpaceInvaders
 {
     public class HighScoreItem : MonoBehaviour
     {

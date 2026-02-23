@@ -1,8 +1,7 @@
-using SpaceInvaders.Common.State;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace SpaceInvaders.UI.Screens
+namespace SpaceInvaders
 {
     public class ControlsScreen : BaseScreen
     {
@@ -19,7 +18,7 @@ namespace SpaceInvaders.UI.Screens
         // Event Handlers
         private void OnExitButtonClicked()
         {
-            _appController.SetState(GameState.MainMenu);
+            // @OTOD _appController.SetState(GameState.MainMenu);
         }
     }
 }

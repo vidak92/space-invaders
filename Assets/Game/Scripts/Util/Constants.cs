@@ -1,4 +1,4 @@
-namespace SpaceInvaders.Util
+namespace SpaceInvaders
 {
     public static class Constants
     {

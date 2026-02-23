@@ -1,4 +1,4 @@
-namespace SpaceInvaders.UI.Screens
+namespace SpaceInvaders
 {
     public class LoadingScreen : BaseScreen
     {

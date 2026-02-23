@@ -1,9 +1,7 @@
-using SpaceInvaders.Gameplay.Objects;
-using SpaceInvaders.Util;
 using TMPro;
 using UnityEngine;
 
-namespace SpaceInvaders.UI.Controls
+namespace SpaceInvaders
 {
     public class ScoreInfoItem : MonoBehaviour
     {

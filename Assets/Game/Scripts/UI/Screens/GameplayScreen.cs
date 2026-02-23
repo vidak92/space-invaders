@@ -1,12 +1,8 @@
-using SpaceInvaders.Common.State;
-using SpaceInvaders.Gameplay;
-using SpaceInvaders.UI.Controls;
-using SpaceInvaders.Util;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace SpaceInvaders.UI.Screens
+namespace SpaceInvaders
 {
     public class GameplayScreen : BaseScreen
     {
@@ -32,33 +28,30 @@ namespace SpaceInvaders.UI.Screens
         [SerializeField]
         private OnScreenButton _shootButton;
 
-        // Overrides
         protected override void OnInit()
         {
-            _gameStatsController.OnGameStatsUpdated += OnGameStatsUpdated;
-
             _exitButton.onClick.AddListener(OnExitButtonClicked);
         }
 
         protected override void UpdateControlsForCurrentPlatform()
         {
-            _moveLeftButton.gameObject.SetActive(Utils.IsCurrentPlatformMobile);
-            _moveRightButton.gameObject.SetActive(Utils.IsCurrentPlatformMobile);
-            _shootButton.gameObject.SetActive(Utils.IsCurrentPlatformMobile);
+            // @TODO for mobile
+            _moveLeftButton.gameObject.SetActive(false);
+            _moveRightButton.gameObject.SetActive(false);
+            _shootButton.gameObject.SetActive(false);
         }
 
-        // Event Handlers
         private void OnExitButtonClicked()
         {
-            _gameStatsController.ResetStats();
-            _appController.SetState(GameState.MainMenu);
+            GameController.SetState(GameState.MainMenu);
         }
 
-        private void OnGameStatsUpdated(GameStats gameStats)
+        // @TODO separate methods for each stat?
+        public void SetGameStats(int score, int wave, int lives)
         {
-            _scoreText.text = $"SCORE: {gameStats.Score}";
-            _waveText.text = $"WAVE: {gameStats.Wave}";
-            _livesText.text = $"LIVES: {gameStats.Lives}";
+            _scoreText.text = $"SCORE: {score}";
+            _waveText.text = $"WAVE: {wave}";
+            _livesText.text = $"LIVES: {lives}";
         }
     }
 }

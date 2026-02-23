@@ -1,14 +1,12 @@
-using SpaceInvaders.Common.Services;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using Zenject;
 
-namespace SpaceInvaders.UI.Controls
+namespace SpaceInvaders
 {
     public class OnScreenButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
-        // Fields
+        // @TODO convert to public fields
         [Header("Components")]
         [SerializeField]
         private Image _image;
@@ -26,13 +24,12 @@ namespace SpaceInvaders.UI.Controls
         [SerializeField]
         private Color _pressedColor;
 
-        [Inject]
-        private InputService _inputService;
+        private InputController _inputController;
 
-        // Unity Events
         private void Update()
         {
-            var isPressed = _inputService.GetInputAction(_inputAction);
+            return; // @NOTE disabled for now
+            var isPressed = _inputController.GetInputAction(_inputAction);
             _image.color = isPressed ? _pressedColor : _defaultColor;
         }
 
@@ -45,15 +42,14 @@ namespace SpaceInvaders.UI.Controls
             }
         }
 
-        // Event Handlers
         public void OnPointerEnter(PointerEventData eventData)
         {
-            _inputService.SetInputAction(_inputAction, true);
+            _inputController.SetInputAction(_inputAction, true);
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            _inputService.SetInputAction(_inputAction, false);
+            _inputController.SetInputAction(_inputAction, false);
         }
     }
 }

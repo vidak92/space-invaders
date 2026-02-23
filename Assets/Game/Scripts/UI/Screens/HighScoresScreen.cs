@@ -1,11 +1,9 @@
-using MijanTools.Common;
-using SpaceInvaders.Common.State;
-using SpaceInvaders.UI.Controls;
 using System.Collections.Generic;
+using SGSTools.Extensions;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace SpaceInvaders.UI.Screens
+namespace SpaceInvaders
 {
     public class HighScoresScreen : BaseScreen
     {
@@ -29,7 +27,7 @@ namespace SpaceInvaders.UI.Screens
 
         protected override void OnShow()
         {
-            var highScoreList = _highScoreService.LoadHighScores();
+            var highScoreList = HighScoreService.LoadHighScores();
             for (int i = 0; i < _highScoreItems.Count; i++)
             {
                 if (highScoreList.Items.ContainsIndex(i))
@@ -50,7 +48,7 @@ namespace SpaceInvaders.UI.Screens
         // Event Handlers
         private void OnExitButtonClicked()
         {
-            _appController.SetState(GameState.MainMenu);
+            GameController.SetState(GameState.MainMenu);
         }
     }
 }
