@@ -1,4 +1,5 @@
 using System;
+using SGSTools.Util;
 using UnityEngine;
 
 namespace SpaceInvaders
@@ -17,10 +18,14 @@ namespace SpaceInvaders
         [SerializeField] private EnemyType _type; // @TODO make public property
         public Health Health;
 
-        private GameController GameController => GameController.Instance;
+        private GameController GameController => ServiceLocator.Get<GameController>();
 
-        public void Init()
+        public void Init(string name)
         {
+            gameObject.name = name;
+            gameObject.SetActive(false);
+            transform.localPosition = Vector3.zero;
+            
             Health.OnDamageTaken += OnDamageTaken;
         }
 

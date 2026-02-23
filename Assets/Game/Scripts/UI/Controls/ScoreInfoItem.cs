@@ -18,12 +18,12 @@ namespace SpaceInvaders
         // Methods
         public void SetPointsValue(int points)
         {
-            _scoreInfoText.text = $"{DisplayStrings.ScoreInfoPrefix}{points}{DisplayStrings.ScoreInfoSuffix}";
+            _scoreInfoText.text = $"{Strings.ScoreInfoPrefix}{points}{Strings.ScoreInfoSuffix}";
         }
 
         public void SetMysteryValue()
         {
-            _scoreInfoText.text = $"{DisplayStrings.ScoreInfoMystery}";
+            _scoreInfoText.text = $"{Strings.ScoreInfoMystery}";
         }
     }
 }

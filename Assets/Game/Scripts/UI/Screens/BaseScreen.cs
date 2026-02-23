@@ -1,14 +1,15 @@
+using SGSTools.Util;
 using UnityEngine;
 
 namespace SpaceInvaders
 {
     public class BaseScreen : MonoBehaviour
     {
-        protected GameController GameController => GameController.Instance;
+        protected GameController GameController => ServiceLocator.Get<GameController>();
         protected UIController UIController => GameController.UIController;
         protected InputController InputController => GameController.InputController;
         protected HighScoreService HighScoreService => GameController.HighScoreService;
-        protected GameplayConfig GameplayConfig => GameController.GameplayConfig;
+        protected GameConfig GameConfig => GameController.gameConfig;
         
         public virtual void Init()
         {

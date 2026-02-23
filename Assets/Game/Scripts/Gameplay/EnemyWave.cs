@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using SGSTools.Components;
+using SGSTools.Util;
 using UnityEngine;
 
 namespace SpaceInvaders
@@ -47,10 +47,6 @@ namespace SpaceInvaders
 
     public class EnemyWave : MonoBehaviour
     {
-        private GameController GameController => GameController.Instance;
-        private GameplayConfig GameplayConfig => GameController.GameplayConfig;
-        private ObjectPool<Enemy> _enemyPool;
-
         private Enemy[,] _enemies;
         private MoveState _moveState;
         private MoveDirection _moveDirection;
@@ -68,9 +64,13 @@ namespace SpaceInvaders
         private float _ufoTimer;
         private float _ufoSpawnDuration;
 
-        private GameplayBounds GameplayBounds => GameplayConfig.GameplayBounds;
-        private WaveConfig WaveConfig => GameplayConfig.WaveConfig;
-        private UFOConfig UFOConfig => GameplayConfig.EnemiesConfig.UFOConfig;
+        private readonly Vector3 _startPosition = new Vector3(0f, 10f, 0f); // @TODO config
+
+        private GameController GameController => ServiceLocator.Get<GameController>();
+        private GameConfig GameConfig => GameController.gameConfig;
+        private GameplayBounds GameplayBounds => GameConfig.GameplayBounds;
+        private WaveConfig WaveConfig => GameConfig.WaveConfig;
+        private UFOConfig UFOConfig => GameConfig.EnemiesConfig.UFOConfig;
 
         private float IdleDuration => WaveConfig.IdleDuration / _currentSpeedMultiplier;
         private float StepDuration => WaveConfig.StepDuration / _currentSpeedMultiplier;
@@ -78,8 +78,10 @@ namespace SpaceInvaders
         private int RowCount => WaveConfig.EnemyRows.Count;
         private int ColumnCount => WaveConfig.EnemiesPerRow;
 
-        private float HorizontalCellSize => (GameplayBounds.Right - GameplayBounds.Left) / WaveConfig.MaxGridColumns;
-        private float VerticalCellSize => (GameplayBounds.Top - GameplayBounds.Bottom) / WaveConfig.MaxGridRows;
+        private int GridRowCount => WaveConfig.GridSize.x;
+        private int GridColCount => WaveConfig.GridSize.y;
+        private float CellWidth => (GameplayBounds.Right - GameplayBounds.Left) / GridColCount;
+        private float CellHeight => (GameplayBounds.Top - GameplayBounds.Bottom) / GridRowCount;
 
         public Transform UFOTransform => _ufo.transform;
 
@@ -91,21 +93,53 @@ namespace SpaceInvaders
                 var enemyType = WaveConfig.EnemyRows[r];
                 for (int c = 0; c < ColumnCount; c++)
                 {
-                    var enemy = Instantiate(GameplayConfig.GameplayAssetsConfig.GetEnemyPrefab(enemyType)); // @TODO pool?
-                    enemy.transform.parent = transform;
-                    enemy.Init();
-                    enemy.name = $"Enemy({r}, {c})";
-                    enemy.gameObject.SetActive(false);
+                    var enemy = Instantiate(GameConfig.GameplayAssetsConfig.GetEnemyPrefab(enemyType), transform);
+                    enemy.Init($"{enemyType}_({r}, {c})");
                     _enemies[c, r] = enemy;
                 }
             }
 
-            _ufo = Instantiate(GameplayConfig.GameplayAssetsConfig.UFO); // @TODO pool?
-            _ufo.gameObject.SetActive(false);
+            _ufo = Instantiate(GameConfig.GameplayAssetsConfig.UFO);
+            _ufo.Init($"{EnemyType.UFO}");
+            
+            transform.position = _startPosition;
         }
 
         public void OnUpdate()
         {
+            DebugDraw.Settings.SortLayerName = "Background";
+            var bounds = GameConfig.GameplayBounds;
+            var cellSize = new Vector3(CellWidth, CellHeight, 0f);
+            var halfCellSize = cellSize / 2f;
+            var topRight = new Vector3(bounds.Right + halfCellSize.x, bounds.Top + halfCellSize.y, 0f);
+            var bottomRight = new Vector3(bounds.Right + halfCellSize.x, bounds.Bottom - halfCellSize.y, 0f);
+            var bottomLeft = new Vector3(bounds.Left - halfCellSize.x, bounds.Bottom - halfCellSize.y, 0f);
+            var topLeft = new Vector3(bounds.Left - halfCellSize.x, bounds.Top + halfCellSize.y, 0f);
+            // DebugDraw.DrawLine(topRight, bottomRight, Color.red);
+            // DebugDraw.DrawLine(bottomRight, bottomLeft, Color.red);
+            // DebugDraw.DrawLine(bottomLeft, topLeft, Color.red);
+            // DebugDraw.DrawLine(topLeft, topRight, Color.red);
+
+            var gridWidth = bounds.Right - bounds.Left + CellWidth;
+            var gridHeight = bounds.Top - bounds.Bottom + CellHeight;
+            for (int r = 0; r <= GridRowCount + 1; r++)
+            {
+                var positionY = r * CellHeight;
+                var position1 = bottomLeft + new Vector3(0f, positionY, 0f);
+                var position2 = bottomLeft + new Vector3(gridWidth, positionY, 0f);
+                DebugDraw.DrawLine(position1, position2);
+            }
+            for (int c = 0; c <= GridColCount + 1; c++)
+            {
+                var positionX = c * CellWidth;
+                var position1 = bottomLeft + new Vector3(positionX, 0f, 0f);
+                var position2 = bottomLeft + new Vector3(positionX, gridHeight, 0f);
+                DebugDraw.DrawLine(position1, position2);
+            }
+            // var center = new Vector3((bounds.Right + bounds.Left) / 2f, (bounds.Top + bounds.Bottom) / 2f, 0f);
+            // var size = new Vector2(bounds.Right - bounds.Left, bounds.Top - bounds.Bottom);
+            // DebugDraw.DrawRect(center, size);
+            
             UpdateSpeedMultiplier();
 
             if (IsCurrentWaveEmpty())
@@ -136,7 +170,7 @@ namespace SpaceInvaders
                 if (enemy.gameObject.activeSelf) { activeEnemies++; }
             }
             var t = 1f - (float)activeEnemies / totalEnemies;
-            _currentSpeedMultiplier = Mathf.Lerp(WaveConfig.MinWaveSpeedMultiplier, WaveConfig.MaxWaveSpeedMultiplier, Mathf.Pow(t, 4f));
+            _currentSpeedMultiplier = WaveConfig.WaveSpeedMultiplierRange.GetValueAt(Mathf.Pow(t, 4f));
         }
 
         private GridBounds GetCurrentGridBounds()
@@ -172,19 +206,19 @@ namespace SpaceInvaders
             {
                 for (int c = 0; c < ColumnCount; c++)
                 {
-                    _enemies[c, r].transform.localPosition = new Vector3(c * HorizontalCellSize, 0f, -r * VerticalCellSize);
+                    _enemies[c, r].transform.localPosition = new Vector3(c * CellWidth, -r * CellHeight, 0f);
                     _enemies[c, r].gameObject.SetActive(true);
                 }
             }
             _currentGridIndex = new GridIndex(0, 0);
             _newGridIndex = _currentGridIndex;
-            MoveToNewGridPosition(1f);
+            MoveToNextGridPosition(1f);
             
             _timer = 0f;
             _moveState = MoveState.Idle;
             _moveDirection = MoveDirection.Right;
             _lastHorizontalMoveDirection = _moveDirection;
-            _currentSpeedMultiplier = WaveConfig.MinWaveSpeedMultiplier;
+            _currentSpeedMultiplier = WaveConfig.WaveSpeedMultiplierRange.Min;
 
             UpdateShotDelay();
             _shotTimer = _shotDelay;
@@ -234,7 +268,8 @@ namespace SpaceInvaders
         // Shoot Methods
         private void UpdateShotDelay()
         {
-            _shotDelay = Random.Range(WaveConfig.MinShotDelay, WaveConfig.MaxShotDelay) / _currentSpeedMultiplier;
+            // @TODO should this be randomized?
+            _shotDelay = WaveConfig.ShotDelayRange.GetRandomValue() / _currentSpeedMultiplier;
         }
 
         private void ShotUpdate()
@@ -263,7 +298,7 @@ namespace SpaceInvaders
                 {
                     var shootingEnemyIndex = Random.Range(0, _enemiesWhoCanShoot.Count);
                     var shootingEnemy = _enemiesWhoCanShoot[shootingEnemyIndex];
-                    GameController.SpawnProjectile(GameplayConfig.EnemiesConfig.ProjectileConfig, shootingEnemy.transform.position);
+                    GameController.SpawnProjectile(GameConfig.EnemiesConfig.ProjectileConfig, shootingEnemy.transform.position);
                 }
             }
         }
@@ -296,11 +331,11 @@ namespace SpaceInvaders
             }
             else
             {
-                MoveToNewGridPosition(_timer);
+                MoveToNextGridPosition(_timer);
             }
         }
 
-        private void MoveToNewGridPosition(float timer)
+        private void MoveToNextGridPosition(float timer)
         {
             var currentPosition = GetPositionForGridIndex(_currentGridIndex);
             var newPosition = GetPositionForGridIndex(_newGridIndex);
@@ -310,17 +345,17 @@ namespace SpaceInvaders
 
         private Vector3 GetPositionForGridIndex(GridIndex gridIndex)
         {
-            var startPosition = new Vector3(GameplayBounds.Left, 0f, GameplayBounds.Top);
-            var offset = new Vector3(gridIndex.Column * HorizontalCellSize, 0f, -gridIndex.Row * VerticalCellSize);
+            var startPosition = new Vector3(GameplayBounds.Left, GameplayBounds.Top, 0f);
+            var offset = new Vector3(gridIndex.Column * CellWidth, -gridIndex.Row * CellHeight, 0f);
             return startPosition + offset;
         }
 
         private MoveDirection GetNextMoveDirection()
         {
             var currentGridBounds = GetCurrentGridBounds();
-            var canMoveRight = _currentGridIndex.Column + currentGridBounds.MaxColumn < WaveConfig.MaxGridColumns;
+            var canMoveRight = _currentGridIndex.Column + currentGridBounds.MaxColumn < GridColCount;
             var canMoveLeft = _currentGridIndex.Column + currentGridBounds.MinColumn > 0;
-            var canMoveDown = _currentGridIndex.Row + currentGridBounds.MaxRow < WaveConfig.MaxGridRows;
+            var canMoveDown = _currentGridIndex.Row + currentGridBounds.MaxRow < GridRowCount;
 
             if (_moveDirection == MoveDirection.Right)
             {
@@ -381,7 +416,7 @@ namespace SpaceInvaders
 
         private void UpdateUFOSpawnDuration()
         {
-            _ufoSpawnDuration = Random.Range(UFOConfig.MinSpawnDuration, UFOConfig.MaxSpawnDuration) / _currentSpeedMultiplier;
+            _ufoSpawnDuration = UFOConfig.SpawnDurationRange.GetRandomValue() / _currentSpeedMultiplier;
         }
     }
 }

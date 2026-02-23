@@ -1,4 +1,5 @@
 using SGSTools.Extensions;
+using SGSTools.Util;
 using UnityEngine;
 
 namespace SpaceInvaders
@@ -7,9 +8,10 @@ namespace SpaceInvaders
     {
         private MoveDirection _moveDirection;
 
-        private GameplayConfig GameplayConfig => GameController.Instance.GameplayConfig;
-        private UFOConfig UFOConfig => GameplayConfig.EnemiesConfig.UFOConfig;
-        private GameplayBounds GameplayBounds => GameplayConfig.GameplayBounds;
+        private GameController GameController => ServiceLocator.Get<GameController>();
+        private GameConfig GameConfig => GameController.gameConfig;
+        private UFOConfig UFOConfig => GameConfig.EnemiesConfig.UFOConfig;
+        private GameplayBounds GameplayBounds => GameConfig.GameplayBounds;
 
         public void OnUpdate(float waveSpeedMultiplier)
         {
@@ -37,7 +39,7 @@ namespace SpaceInvaders
                 _moveDirection = MoveDirection.Left;
                 positionX = UFOConfig.BoundsRight;
             }
-            transform.position = new Vector3(positionX, 0f, GameplayBounds.Top);
+            transform.position = new Vector3(positionX, GameplayBounds.Top, 0f);
         }
     }
 }

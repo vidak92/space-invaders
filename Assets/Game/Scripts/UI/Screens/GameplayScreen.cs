@@ -6,39 +6,29 @@ namespace SpaceInvaders
 {
     public class GameplayScreen : BaseScreen
     {
-        // Fields
-        [SerializeField]
-        private Button _exitButton;
-
-        [SerializeField]
-        private TMP_Text _scoreText;
-
-        [SerializeField]
-        private TMP_Text _waveText;
-
-        [SerializeField]
-        private OnScreenButton _moveLeftButton;
-
-        [SerializeField]
-        private OnScreenButton _moveRightButton;
-
-        [SerializeField]
-        private TMP_Text _livesText;
-
-        [SerializeField]
-        private OnScreenButton _shootButton;
+        public Button PauseButton;
+        
+        public StatItem ScoreItem;
+        public StatItem WaveItem;
+        public StatItem LivesItem;
 
         protected override void OnInit()
         {
-            _exitButton.onClick.AddListener(OnExitButtonClicked);
+            PauseButton.onClick.AddListener(OnExitButtonClicked);
+
+            ScoreItem.LabelText.text = Strings.STAT_SCORE;
+            ScoreItem.ValueText.text = "0";
+            
+            WaveItem.LabelText.text = Strings.STAT_WAVE;
+            WaveItem.ValueText.text = "0";
+            
+            LivesItem.LabelText.text = Strings.STAT_LIVES;
+            LivesItem.ValueText.text = "0";
         }
 
         protected override void UpdateControlsForCurrentPlatform()
         {
-            // @TODO for mobile
-            _moveLeftButton.gameObject.SetActive(false);
-            _moveRightButton.gameObject.SetActive(false);
-            _shootButton.gameObject.SetActive(false);
+            // @TODO mobile controls
         }
 
         private void OnExitButtonClicked()
@@ -49,9 +39,9 @@ namespace SpaceInvaders
         // @TODO separate methods for each stat?
         public void SetGameStats(int score, int wave, int lives)
         {
-            _scoreText.text = $"SCORE: {score}";
-            _waveText.text = $"WAVE: {wave}";
-            _livesText.text = $"LIVES: {lives}";
+            ScoreItem.ValueText.text = $"{score}";
+            WaveItem.ValueText.text = $"{wave}";
+            LivesItem.ValueText.text = $"{lives}";
         }
     }
 }

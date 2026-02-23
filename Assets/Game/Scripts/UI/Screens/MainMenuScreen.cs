@@ -1,63 +1,40 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace SpaceInvaders
 {
     public class MainMenuScreen : BaseScreen
     {
-        // @TODO convert to public
-        [SerializeField]
-        private Button _exitButton;
+        public ScoreInfoItem ScoreInfoItemEnemy1;
+        public ScoreInfoItem ScoreInfoItemEnemy2;
+        public ScoreInfoItem ScoreInfoItemEnemy3;
+        public ScoreInfoItem ScoreInfoItemEnemyUFO;
 
-        [SerializeField]
-        private ScoreInfoItem[] _scoreInfoItems;
-
-        [SerializeField]
-        private Button _playButton;
-
-        [SerializeField]
-        private Button _highScoresButton;
-
-        [SerializeField]
-        private Button _controlsButton;
+        public UIButton PlayButton;
+        public UIButton HighScoresButton;
+        public UIButton ControlsButton;
         
         protected override void OnInit()
         {
-            _exitButton.onClick.AddListener(OnExitButtonClicked);
-            _playButton.onClick.AddListener(OnPlayButtonClicked);
-            _highScoresButton.onClick.AddListener(OnHighScoresButtonClicked);
-            _controlsButton.onClick.AddListener(OnControlsButtonClicked);
-        }
+            PlayButton.Button.onClick.AddListener(OnPlayButtonClicked);
+            HighScoresButton.Button.onClick.AddListener(OnHighScoresButtonClicked);
+            ControlsButton.Button.onClick.AddListener(OnControlsButtonClicked);
 
-        protected override void OnShow()
-        {
-            foreach (var scoreInfoItem in _scoreInfoItems)
-            {
-                if (scoreInfoItem.EnemyType == EnemyType.UFO)
-                {
-                    scoreInfoItem.SetMysteryValue();
-                }
-                else
-                {
-                    var pointsValue = GameplayConfig.EnemiesConfig.GetScoreValueForEnemyType(scoreInfoItem.EnemyType);
-                    scoreInfoItem.SetPointsValue(pointsValue);
-                }
-            }
+            PlayButton.Text.text = Strings.PLAY_BUTTON_TEXT;
+            HighScoresButton.Text.text = Strings.HIGH_SCORES_BUTTON_TEXT;
+            ControlsButton.Text.text = Strings.CONTROLS_BUTTON_TEXT;
+
+            ScoreInfoItemEnemy1.SetPointsValue(GameConfig.EnemiesConfig.GetScoreValueForEnemyType(EnemyType.Enemy1));
+            ScoreInfoItemEnemy2.SetPointsValue(GameConfig.EnemiesConfig.GetScoreValueForEnemyType(EnemyType.Enemy1));
+            ScoreInfoItemEnemy3.SetPointsValue(GameConfig.EnemiesConfig.GetScoreValueForEnemyType(EnemyType.Enemy1));
+            ScoreInfoItemEnemyUFO.SetMysteryValue();
         }
 
         protected override void UpdateControlsForCurrentPlatform()
         {
             // @TODO for mobile
-            _exitButton.gameObject.SetActive(false);
-            _controlsButton.gameObject.SetActive(false);
+            ControlsButton.gameObject.SetActive(true);
         }
-
-        // Event Handlers
-        private void OnExitButtonClicked()
-        {
-            Application.Quit();
-        }
-
+        
         private void OnPlayButtonClicked()
         {
             GameController.SetState(GameState.Gameplay);

@@ -1,4 +1,5 @@
 using SGSTools.Components;
+using SGSTools.Util;
 using UnityEngine;
 
 namespace SpaceInvaders
@@ -15,9 +16,7 @@ namespace SpaceInvaders
 
     public class GameController : MonoBehaviour
     {
-        public static GameController Instance { get; private set; }
-
-        public GameplayConfig GameplayConfig;
+        public GameConfig gameConfig;
         
         [Space]
         public InputController InputController;
@@ -38,24 +37,27 @@ namespace SpaceInvaders
         
         private void Awake()
         {
-            Instance = this;
+            ServiceLocator.Add<GameController>(this);
             
             Application.targetFrameRate = 60;
-            Camera.main.orthographicSize = GameplayConfig.CameraSize;
+            Camera.main.orthographicSize = gameConfig.CameraSize;
+            
+            DebugDraw.IsEnabled = false;
+            DebugDraw.Settings.DefaultColor = Color.gray;
             
             InputController.Init();
             UIController.Init();
             
-            _projectilePool = ObjectPool<Projectile>.CreateWithGameObject(GameplayConfig.GameplayAssetsConfig.Projectile, 100, "ProjectilePool");
+            _projectilePool = ObjectPool<Projectile>.CreateWithGameObject(gameConfig.GameplayAssetsConfig.Projectile, 100, "ProjectilePool");
             // _projectilePool.Parent.parent = transform;
 
-            _player = Instantiate(GameplayConfig.GameplayAssetsConfig.Player); // @TODO pool?
+            _player = Instantiate(gameConfig.GameplayAssetsConfig.Player); // @TODO pool?
             _player.OnPlayerDied += OnPlayerDied;
             _player.Init();
             _player.gameObject.SetActive(false);
             _player.transform.parent = transform;
 
-            _enemyWave = Instantiate(GameplayConfig.GameplayAssetsConfig.EnemyWave); // TODO pool?
+            _enemyWave = Instantiate(gameConfig.GameplayAssetsConfig.EnemyWave); // TODO pool?
             _enemyWave.transform.parent = transform;
             _enemyWave.Init();
 
@@ -66,6 +68,11 @@ namespace SpaceInvaders
 
         private void Update()
         {
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                DebugDraw.IsEnabled = !DebugDraw.IsEnabled;
+            }
+            
             switch (_currentState)
             {
                 case GameState.Loading:
@@ -88,7 +95,7 @@ namespace SpaceInvaders
                     else
                     {
                         _resultsScreenTimer += Time.deltaTime;
-                        if (_resultsScreenTimer > GameplayConfig.ResultsScreenDelay)
+                        if (_resultsScreenTimer > gameConfig.ResultsScreenDelay)
                         {
                             // @TODO show results
                         }
@@ -126,33 +133,40 @@ namespace SpaceInvaders
                 }
                 case GameState.MainMenu:
                 {
-                    ExitGame();
-                    UIController.SetActiveScreen(UIController.MainMenuScreen);
+                    UIController.StartScreenTransition(UIController.MainMenuScreen, onComplete: () =>
+                    {
+                        ExitGame();
+                    });
                     break;
                 }
                 case GameState.Gameplay:
                 {
-                    StartGame();
-                    UIController.SetActiveScreen(UIController.GameplayScreen);
+                    UIController.StartScreenTransition(UIController.GameplayScreen, onComplete: () =>
+                    {
+                        StartGame();
+                    });
                     break;
                 }
                 case GameState.Results:
                 {
-                    _enemyWave.EndWave();
-                    var highScoreStats = new HighScoreStats(_score);
-                    HighScoreService.AddNewHighScore(highScoreStats);
-                    UIController.SetActiveScreen(UIController.ResultsScreen);
-                    UIController.ResultsScreen.SetStats(_score, _wave);
+                    UIController.StartScreenTransition(UIController.ResultsScreen, onComplete: () =>
+                    {
+                        _enemyWave.EndWave();
+                        _projectilePool.ReturnAllActiveObjects();
+                        var highScoreStats = new HighScoreStats(_score);
+                        HighScoreService.AddNewHighScore(highScoreStats);
+                        UIController.ResultsScreen.SetStats(_score, _wave); 
+                    });
                     break;
                 }
                 case GameState.HighScores:
                 {
-                    UIController.SetActiveScreen(UIController.HighScoresScreen);
+                    UIController.StartScreenTransition(UIController.HighScoresScreen);
                     break;
                 }
                 case GameState.Controls:
                 {
-                    UIController.SetActiveScreen(UIController.ControlsScreen);
+                    UIController.StartScreenTransition(UIController.ControlsScreen);
                     break;
                 }
                 default:
@@ -172,7 +186,7 @@ namespace SpaceInvaders
 
         public void OnEnemyShot(EnemyType enemyType)
         {
-            _score += GameplayConfig.EnemiesConfig.GetScoreValueForEnemyType(enemyType);
+            _score += gameConfig.EnemiesConfig.GetScoreValueForEnemyType(enemyType);
             UIController.GameplayScreen.SetGameStats(_score, _wave, _lives);
             // @TODO update UI and game flow
         }
@@ -193,7 +207,7 @@ namespace SpaceInvaders
         {
             _score = 0;
             _wave = 0;
-            _lives = GameplayConfig.PlayerConfig.StartLives;
+            _lives = gameConfig.PlayerConfig.StartLives;
             
             _player.gameObject.SetActive(true);
             _player.ResetState();
@@ -211,7 +225,7 @@ namespace SpaceInvaders
         public void SpawnProjectile(ProjectileConfig projectileConfig, Vector3 position)
         {
             var projectile = _projectilePool.Get();
-            projectile.Init(GameplayConfig, projectileConfig, position);
+            projectile.Init(gameConfig, projectileConfig, position);
         }
         
         public void DespawnProjectile(Projectile projectile)

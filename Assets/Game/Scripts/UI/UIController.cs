@@ -1,4 +1,8 @@
+using System;
+using DG.Tweening;
+using SGSTools.Extensions;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace SpaceInvaders
 {
@@ -13,7 +17,11 @@ namespace SpaceInvaders
         public HighScoresScreen HighScoresScreen;
         public ControlsScreen ControlsScreen;
 
+        [Space]
+        public Image TransitionImage;
+
         public BaseScreen ActiveScreen { get; private set; }
+        public bool IsTransitioning { get; private set; }
 
         public void Init()
         {
@@ -25,7 +33,10 @@ namespace SpaceInvaders
             GameplayScreen.Init();
             ResultsScreen.Init();
             HighScoresScreen.Init();
-            ControlsScreen.Hide();
+            ControlsScreen.Init();
+
+            TransitionImage.SetAlpha(1f);
+            TransitionImage.gameObject.SetActive(true);
         }
 
         public void SetActiveScreen(BaseScreen screen)
@@ -39,6 +50,27 @@ namespace SpaceInvaders
             {
                 ActiveScreen.Show();
             }
+        }
+
+        public void StartScreenTransition(BaseScreen toScreen, Action onComplete = null)
+        {
+            IsTransitioning = true;
+            // TransitionImage.SetAlpha(0f);
+            TransitionImage.gameObject.SetActive(true);
+            
+            var seq = DOTween.Sequence();
+            seq.Append(TransitionImage.DOFade(1f, 0.25f));
+            seq.AppendCallback(() =>
+            {
+                SetActiveScreen(toScreen);
+                onComplete?.Invoke();
+            });
+            seq.Append(TransitionImage.DOFade(0f, 0.25f));
+            seq.AppendCallback(() =>
+            {
+                IsTransitioning = false;
+                TransitionImage.gameObject.SetActive(false);
+            });
         }
     }
 }

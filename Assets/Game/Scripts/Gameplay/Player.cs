@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using SGSTools.Extensions;
+using SGSTools.Util;
 using UnityEngine;
 
 namespace SpaceInvaders
@@ -8,10 +9,8 @@ namespace SpaceInvaders
     public class Player : MonoBehaviour
     {
         public Health Health;
+        public SpriteRenderer SpriteRenderer;
         
-        [SerializeField]
-        private MeshRenderer _meshRenderer;
-
         private float _moveSpeedX;
         private float _accelerationTimer;
         private readonly float _accelerationTimerEpsilon = 0.064f;
@@ -23,22 +22,22 @@ namespace SpaceInvaders
 
         private List<Color> _materialColors = new List<Color>();
 
-        private GameController GameController => GameController.Instance;
-        private GameplayConfig GameplayConfig => GameController.GameplayConfig;
-        private PlayerConfig PlayerConfig => GameplayConfig.PlayerConfig;
-        private GameplayBounds GameplayBounds => GameplayConfig.GameplayBounds;
+        private Vector3 _startPosition = new Vector3(0f, -12f, 0f); // @TODO config
+
+        private GameController GameController => ServiceLocator.Get<GameController>();
+        private GameConfig GameConfig => GameController.gameConfig;
+        private PlayerConfig PlayerConfig => GameConfig.PlayerConfig;
+        private GameplayBounds GameplayBounds => GameConfig.GameplayBounds;
 
         public Action OnPlayerDied { get; set; }
         
         public void Init()
         {
             ResetState();
-            InitMaterialColors();
-
             Health.OnDamageTaken += OnDamageTaken;
         }
-
-        private void OnTriggerEnter(Collider other)
+        
+        private void OnTriggerEnter2D(Collider2D other)
         {
             var health = other.GetComponent<Health>();
             if (health != null)
@@ -60,7 +59,7 @@ namespace SpaceInvaders
 
         public void ResetState()
         {
-            transform.position = new Vector3(0f, 0f, GameplayBounds.Bottom);
+            transform.position = _startPosition;
             ResetColor();
 
             _moveSpeedX = 0f;
@@ -171,23 +170,9 @@ namespace SpaceInvaders
 
         private void SetColorMultiplier(Color color)
         {
-            for (int i = 0; i < _materialColors.Count; i++)
-            {
-                if (_meshRenderer.materials.ContainsIndex(i))
-                {
-                    _meshRenderer.materials[i].color = _materialColors[i] * color;
-                }
-            }
+            SpriteRenderer.color = color;
         }
-
-        private void InitMaterialColors()
-        {
-            foreach (var material in _meshRenderer.materials)
-            {
-                _materialColors.Add(material.color);
-            }
-        }
-
+        
         public void OnLifeLost(int remainingLives)
         {
             if (remainingLives == 0)

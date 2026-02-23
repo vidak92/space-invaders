@@ -22,7 +22,7 @@ namespace SpaceInvaders
             gameObject.SetActive(true);
 
             _placeText.text = $"{place}.";
-            _scoreText.text = $"{DisplayStrings.ResultsScorePrefix}{highScoreStats.Score}";
+            _scoreText.text = $"{Strings.ResultsScorePrefix}{highScoreStats.Score}";
             var date = DateTime.ParseExact(highScoreStats.Timestamp, Constants.TimestampFormat, null);
             _dateText.text = $"{date}";
         }
