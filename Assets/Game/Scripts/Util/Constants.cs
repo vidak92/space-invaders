@@ -15,6 +15,9 @@ namespace SpaceInvaders
         public const string ScoreInfoMystery = ": ???????";
 
         public const string PLAY_BUTTON_TEXT = "PLAY";
+        public const string BACK_BUTTON_TEXT = "BACK";
+        public const string EXIT_BUTTON_TEXT = "EXIT";
+        public const string RESUME_BUTTON_TEXT = "RESUME";
         public const string HIGH_SCORES_BUTTON_TEXT = "HIGH SCORES";
         public const string CONTROLS_BUTTON_TEXT = "CONTROLS";
 

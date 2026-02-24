@@ -207,7 +207,7 @@ MonoBehaviour:
   LoadingScreen: {fileID: 320997191583103215}
   MainMenuScreen: {fileID: 7923199078582901515}
   GameplayScreen: {fileID: 111503072878536572}
-  ResultsScreen: {fileID: 8046042153515055511}
+  GameOverScreen: {fileID: 8046042153515055511}
   HighScoresScreen: {fileID: 3571895373300000228}
   ControlsScreen: {fileID: 7279892562422632166}
   TransitionImage: {fileID: 7599528575770370927}
@@ -923,7 +923,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3884421749966044347, guid: 72f86d7dcffca8046b89354fde10e9bf, type: 3}
       propertyPath: m_Name
-      value: ResultsScreen
+      value: GameOverScreen
       objectReference: {fileID: 0}
     - target: {fileID: 3884421749966044347, guid: 72f86d7dcffca8046b89354fde10e9bf, type: 3}
       propertyPath: m_IsActive

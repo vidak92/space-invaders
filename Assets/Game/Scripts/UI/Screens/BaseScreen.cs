@@ -9,7 +9,7 @@ namespace SpaceInvaders
         protected UIController UIController => GameController.UIController;
         protected InputController InputController => GameController.InputController;
         protected HighScoreService HighScoreService => GameController.HighScoreService;
-        protected GameConfig GameConfig => GameController.gameConfig;
+        protected GameConfig GameConfig => GameController.GameConfig;
         
         public virtual void Init()
         {

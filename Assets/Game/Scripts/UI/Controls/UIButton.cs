@@ -1,3 +1,4 @@
+using SGSTools.Extensions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -14,10 +15,12 @@ namespace SpaceInvaders
         [Space]
         public Sprite SpriteDefault;
         public Sprite SpritePressed;
+        public float TextPositionYOffsetOnPress;
 
         public void Awake()
         {
             Image.sprite = SpriteDefault;
+            Text.rectTransform.SetAnchoredPositionX(0f);
             Button.onClick.AddListener(OnButtonClick);
         }
 
@@ -34,11 +37,13 @@ namespace SpaceInvaders
         public void OnPointerDown(PointerEventData eventData)
         {
             Image.sprite = SpritePressed;
+            Text.rectTransform.SetAnchoredPositionY(-TextPositionYOffsetOnPress);
         }
 
         public void OnPointerUp(PointerEventData eventData)
         {
             Image.sprite = SpriteDefault;
+            Text.rectTransform.SetAnchoredPositionY(0f);
         }
     }
 }

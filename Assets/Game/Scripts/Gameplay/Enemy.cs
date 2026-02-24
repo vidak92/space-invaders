@@ -1,4 +1,7 @@
 using System;
+using DG.Tweening;
+using DG.Tweening.Plugins;
+using SGSTools.Extensions;
 using SGSTools.Util;
 using UnityEngine;
 
@@ -15,24 +18,73 @@ namespace SpaceInvaders
 
     public class Enemy : MonoBehaviour
     {
-        [SerializeField] private EnemyType _type; // @TODO make public property
+        public Collider2D Collider;
         public Health Health;
-
+        public SpriteRenderer SpriteRenderer;
+        public ParticleSystem Particles;
+        
+        [Space]
+        public EnemyType Type;
+        
+        public bool IsActive { get; private set; }
+        
         private GameController GameController => ServiceLocator.Get<GameController>();
 
         public void Init(string name)
         {
             gameObject.name = name;
-            gameObject.SetActive(false);
             transform.localPosition = Vector3.zero;
             
             Health.OnDamageTaken += OnDamageTaken;
+            SetActive(false);
+        }
+        
+        private void OnDamageTaken()
+        {
+            Collider.enabled = false;
+            SpriteRenderer.enabled = false;
+            // @TODO pool particles instead of having one per enemy
+            Particles.Play();
+            Particles.transform.SetParent(null, worldPositionStays: true);
+            Particles.transform.SetLocalScale(1f);
+            
+            var particleLifetime = Particles.main.startLifetime.constantMax;
+            DOVirtual.DelayedCall(particleLifetime, () =>
+            {
+                Particles.transform.SetParent(transform, worldPositionStays: true);
+                Particles.transform.localPosition = Vector3.zero;
+                Particles.transform.SetLocalScale(1f);
+                Collider.enabled = true;
+                SpriteRenderer.enabled = true;
+                SetActive(false);
+            });
+            
+            GameController.OnEnemyShot(Type);
+        }
+        
+        public void SetActive(bool active)
+        {
+            IsActive = active;
+            gameObject.SetActive(active);
         }
 
-        public void OnDamageTaken()
+        public void Spawn(Vector3 position, float delay, float duration)
         {
-            gameObject.SetActive(false);
-            GameController.OnEnemyShot(_type);
+            transform.DOKill();
+            
+            transform.localPosition = position;
+            transform.localScale = Vector3.zero;
+            Collider.enabled = false;
+            SetActive(true);
+
+            // TODO config
+            transform.DOScale(2f, duration)
+                .SetDelay(delay)
+                .SetEase(Ease.OutBack)
+                .OnComplete(() =>
+                {
+                    Collider.enabled = true;
+                });
         }
     }
 }

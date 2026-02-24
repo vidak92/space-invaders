@@ -1,4 +1,3 @@
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,13 +7,24 @@ namespace SpaceInvaders
     {
         public Button PauseButton;
         
+        [Space]
         public StatItem ScoreItem;
         public StatItem WaveItem;
         public StatItem LivesItem;
+        
+        [Space]
+        public GameObject PauseOverlayView;
+        public UIButton ResumeButton;
+        public UIButton ExitButton;
 
         protected override void OnInit()
         {
-            PauseButton.onClick.AddListener(OnExitButtonClicked);
+            ResumeButton.Text.text = Strings.RESUME_BUTTON_TEXT;
+            ExitButton.Text.text = Strings.EXIT_BUTTON_TEXT;
+            
+            PauseButton.onClick.AddListener(OnPauseButtonClicked);
+            ResumeButton.Button.onClick.AddListener(OnResumeButtonClicked);
+            ExitButton.Button.onClick.AddListener(OnExitButtonClicked);
 
             ScoreItem.LabelText.text = Strings.STAT_SCORE;
             ScoreItem.ValueText.text = "0";
@@ -26,14 +36,29 @@ namespace SpaceInvaders
             LivesItem.ValueText.text = "0";
         }
 
+        protected override void OnShow()
+        {
+            SetPauseOverlayVisible(false);
+        }
+
         protected override void UpdateControlsForCurrentPlatform()
         {
             // @TODO mobile controls
         }
 
+        private void OnPauseButtonClicked()
+        {
+            GameController.PauseGame();
+        }
+        
+        private void OnResumeButtonClicked()
+        {
+            GameController.ResumeGame();
+        }
+        
         private void OnExitButtonClicked()
         {
-            GameController.SetState(GameState.MainMenu);
+            GameController.ExitGame();
         }
 
         // @TODO separate methods for each stat?
@@ -42,6 +67,11 @@ namespace SpaceInvaders
             ScoreItem.ValueText.text = $"{score}";
             WaveItem.ValueText.text = $"{wave}";
             LivesItem.ValueText.text = $"{lives}";
+        }
+
+        public void SetPauseOverlayVisible(bool visible)
+        {
+            PauseOverlayView.SetActive(visible);
         }
     }
 }

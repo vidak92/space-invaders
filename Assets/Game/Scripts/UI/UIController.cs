@@ -13,7 +13,7 @@ namespace SpaceInvaders
         public LoadingScreen LoadingScreen;
         public MainMenuScreen MainMenuScreen;
         public GameplayScreen GameplayScreen;
-        public ResultsScreen ResultsScreen;
+        public GameOverScreen GameOverScreen;
         public HighScoresScreen HighScoresScreen;
         public ControlsScreen ControlsScreen;
 
@@ -31,7 +31,7 @@ namespace SpaceInvaders
             LoadingScreen.Init();
             MainMenuScreen.Init();
             GameplayScreen.Init();
-            ResultsScreen.Init();
+            GameOverScreen.Init();
             HighScoresScreen.Init();
             ControlsScreen.Init();
 

@@ -37,17 +37,17 @@ namespace SpaceInvaders
         
         private void OnPlayButtonClicked()
         {
-            GameController.SetState(GameState.Gameplay);
+            GameController.StartGame();
         }
 
         private void OnHighScoresButtonClicked()
         {
-            GameController.SetState(GameState.HighScores);
+            GameController.ShowHighScores();
         }
 
         private void OnControlsButtonClicked()
         {
-            GameController.SetState(GameState.Controls);
+            GameController.ShowControls();
         }
     }
 }

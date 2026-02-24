@@ -1,54 +1,46 @@
 using System.Collections.Generic;
 using SGSTools.Extensions;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace SpaceInvaders
 {
     public class HighScoresScreen : BaseScreen
     {
-        // Fields
-        [SerializeField]
-        private List<HighScoreItem> _highScoreItems = new List<HighScoreItem>();
+        public List<HighScoreItem> HighScoreItems = new List<HighScoreItem>();
+        public GameObject PlaceholderView;
+        public UIButton ExitButton;
 
-        [SerializeField]
-        private GameObject _placeholderView;
-
-        [SerializeField]
-        private Button _exitButton;
-
-        // Overrides
         protected override void OnInit()
         {
-            _exitButton.onClick.AddListener(OnExitButtonClicked);
+            ExitButton.Text.text = Strings.BACK_BUTTON_TEXT;
+            ExitButton.Button.onClick.AddListener(OnExitButtonClicked);
 
-            _placeholderView.gameObject.SetActive(false);
+            PlaceholderView.gameObject.SetActive(false);
         }
 
         protected override void OnShow()
         {
             var highScoreList = HighScoreService.LoadHighScores();
-            for (int i = 0; i < _highScoreItems.Count; i++)
+            for (int i = 0; i < HighScoreItems.Count; i++)
             {
                 if (highScoreList.Items.ContainsIndex(i))
                 {
                     var highScoreStats = highScoreList.Items[i];
-                    _highScoreItems[i].SetData(i + 1, highScoreStats);
+                    HighScoreItems[i].SetData(i + 1, highScoreStats);
                 }
                 else
                 {
-                    _highScoreItems[i].Hide();
+                    HighScoreItems[i].Hide();
                 }
             }
 
             var isHighScoreListEmpty = highScoreList.Items.IsNullOrEmpty();
-            _placeholderView.gameObject.SetActive(isHighScoreListEmpty);
+            PlaceholderView.gameObject.SetActive(isHighScoreListEmpty);
         }
 
-        // Event Handlers
         private void OnExitButtonClicked()
         {
-            GameController.SetState(GameState.MainMenu);
+            GameController.ShowMainMenu();
         }
     }
 }

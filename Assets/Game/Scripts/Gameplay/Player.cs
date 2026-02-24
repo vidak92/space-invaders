@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using DG.Tweening;
 using SGSTools.Extensions;
 using SGSTools.Util;
 using UnityEngine;
@@ -8,8 +9,10 @@ namespace SpaceInvaders
 {
     public class Player : MonoBehaviour
     {
+        public Collider2D[] Colliders;
         public Health Health;
         public SpriteRenderer SpriteRenderer;
+        public ParticleSystem Particles;
         
         private float _moveSpeedX;
         private float _accelerationTimer;
@@ -22,29 +25,21 @@ namespace SpaceInvaders
 
         private List<Color> _materialColors = new List<Color>();
 
-        private Vector3 _startPosition = new Vector3(0f, -12f, 0f); // @TODO config
+        private Vector3 _startPosition = new Vector3(0f, -14f, 0f); // @TODO config
+
+        public bool IsActive { get; private set; }
 
         private GameController GameController => ServiceLocator.Get<GameController>();
-        private GameConfig GameConfig => GameController.gameConfig;
+        private GameConfig GameConfig => GameController.GameConfig;
         private PlayerConfig PlayerConfig => GameConfig.PlayerConfig;
         private GameplayBounds GameplayBounds => GameConfig.GameplayBounds;
 
-        public Action OnPlayerDied { get; set; }
+        public Action OnPlayerKilled { get; set; }
         
         public void Init()
         {
             ResetState();
             Health.OnDamageTaken += OnDamageTaken;
-        }
-        
-        private void OnTriggerEnter2D(Collider2D other)
-        {
-            var health = other.GetComponent<Health>();
-            if (health != null)
-            {
-                health.TakeDamage();
-                OnEnemyHit();
-            }
         }
 
         private void OnDamageTaken()
@@ -55,6 +50,12 @@ namespace SpaceInvaders
                 _invincibleTimer = 0f;
                 GameController.OnPlayerShot();
             }
+        }
+        
+        public void SetActive(bool active)
+        {
+            IsActive = active;
+            gameObject.SetActive(active);
         }
 
         public void ResetState()
@@ -68,6 +69,9 @@ namespace SpaceInvaders
 
             _isInvincible = false;
             _invincibleTimer = 0f;
+
+            SetActive(false);
+            SetCollidersEnabled(true);
         }
 
         public void OnUpdate(PlayerInput playerInput)
@@ -150,7 +154,7 @@ namespace SpaceInvaders
             {
                 var multiplier = Mathf.Cos(Time.time * PlayerConfig.InvincibilityBlinkSpeed);
                 multiplier = Mathf.Abs(multiplier);
-                var color = Color.Lerp(PlayerConfig.InvincibilityMinColorTint, PlayerConfig.InvincibilityMaxColorTint, multiplier);
+                var color = Color.Lerp(PlayerConfig.InvincibilityColorTint, Color.white, multiplier);
                 SetColorMultiplier(color);
 
                 _invincibleTimer += dt;
@@ -165,7 +169,7 @@ namespace SpaceInvaders
 
         private void ResetColor()
         {
-            SetColorMultiplier(PlayerConfig.InvincibilityMaxColorTint);
+            SetColorMultiplier(Color.white);
         }
 
         private void SetColorMultiplier(Color color)
@@ -177,15 +181,27 @@ namespace SpaceInvaders
         {
             if (remainingLives == 0)
             {
-                gameObject.SetActive(false);
-                OnPlayerDied?.Invoke();
+                SetCollidersEnabled(false);
+                SpriteRenderer.enabled = false;
+                Particles.Play();
+
+                var particleLifetime = Particles.main.startLifetime.constantMax;
+                DOVirtual.DelayedCall(particleLifetime, () =>
+                {
+                    SetCollidersEnabled(true);
+                    SpriteRenderer.enabled = true;
+                    SetActive(false);
+                    OnPlayerKilled?.Invoke();
+                });
             }
         }
 
-        private void OnEnemyHit()
+        private void SetCollidersEnabled(bool enabled)
         {
-            gameObject.SetActive(false);
-            OnPlayerDied?.Invoke();
+            foreach (var collider in Colliders)
+            {
+                collider.enabled = enabled;
+            }
         }
     }
 }
