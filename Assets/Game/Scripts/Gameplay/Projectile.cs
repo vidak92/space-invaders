@@ -14,10 +14,10 @@ namespace SpaceInvaders
 
     public class Projectile : MonoBehaviour
     {
+        public Rigidbody2D Rigidbody;
+        
         private GameConfig _gameConfig;
-
         private ProjectileConfig _projectileConfig;
-
         private Vector3 _direction;
         
         private GameController GameController => ServiceLocator.Get<GameController>(); // @TODO use callbacks instead
@@ -35,6 +35,8 @@ namespace SpaceInvaders
             transform.rotation = Quaternion.Euler(0f, 0f, angleZ);
 
             gameObject.layer = _projectileConfig.LayerMask.ToIndex();
+
+            Rigidbody.linearVelocity = _direction * projectileConfig.MoveSpeed;
         }
 
         private void OnTriggerEnter2D(Collider2D other)
@@ -47,15 +49,11 @@ namespace SpaceInvaders
             }
         }
 
-        public void Update()
+        public void FixedUpdate()
         {
-            var dt = Time.deltaTime;
-            transform.position += _projectileConfig.MoveSpeed * _direction * dt;
-
-            var cameraSize = _gameConfig.CameraSize;
-            var positionY = transform.position.y;
-            if (positionY < -cameraSize || positionY > cameraSize)
+            if (Mathf.Abs(transform.position.y) > _projectileConfig.MaxPositionY)
             {
+                Rigidbody.linearVelocity = Vector2.zero;
                 GameController.DespawnProjectile(this);
             }
         }

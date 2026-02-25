@@ -50,6 +50,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11feffb2651fd754eb9cae9dd4fa564c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Rigidbody: {fileID: 5597713198489546758}
   Colliders:
   - {fileID: 8154978229505190693}
   - {fileID: 1620098240327999260}

@@ -20,7 +20,7 @@ namespace SpaceInvaders
 
         protected override void OnShow()
         {
-            var highScoreList = HighScoreService.LoadHighScores();
+            var highScoreList = AppController.HighScoreService.LoadHighScores();
             for (int i = 0; i < HighScoreItems.Count; i++)
             {
                 if (highScoreList.Items.ContainsIndex(i))

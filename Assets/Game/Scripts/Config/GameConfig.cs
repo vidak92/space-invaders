@@ -21,14 +21,17 @@ namespace SpaceInvaders
         public float InitialVerticalOffset;
         public ProjectileDirection Direction;
         public LayerMask LayerMask;
+        public float MaxPositionY;
     }
 
     [Serializable]
     public class PlayerConfig
     {
-        public float MoveSpeed;
-        public float AccelerationDuration;
-        public float ShotCooldown;
+        public float MaxMoveSpeed;
+        public float Acceleration;
+        
+        [Space]
+        public float ShotCooldownDuration;
         
         [Space]
         public float InvincibilityDuration;
@@ -54,6 +57,7 @@ namespace SpaceInvaders
         [Space]
         public float BoundsLeft;
         public float BoundsRight;
+        public float FadeOutDistance;
 
         [Space]
         public FloatRange SpawnDurationRangeMin;
@@ -69,10 +73,13 @@ namespace SpaceInvaders
         public int EnemyUFOScoreValue;
         
         [Space]
+        public ProjectileConfig ProjectileConfig;
+        
+        [Space]
         public UFOConfig UFOConfig;
 
         [Space]
-        public ProjectileConfig ProjectileConfig;
+        public FormationConfig FormationConfig;
         
         public int GetScoreValueForEnemyType(EnemyType enemyType)
         {
@@ -95,7 +102,7 @@ namespace SpaceInvaders
     }
 
     [Serializable]
-    public class WaveConfig
+    public class FormationConfig
     {
         public float NewWaveDelay;
         public float SpawnDuration;
@@ -109,7 +116,8 @@ namespace SpaceInvaders
         public FloatRange ShotDelayRangeMin;
         public FloatRange ShotDelayRangeMax;
 
-        [Space]
+        [Header("Grid")]
+        public GameplayBounds GridBounds;
         public Vector2Int GridSize;
         public int EnemiesPerRow;
         public List<EnemyType> EnemyRows = new List<EnemyType>();
@@ -119,7 +127,6 @@ namespace SpaceInvaders
     public class GameConfig : ScriptableObject
     {
         public float CameraSize;
-        public float ResultsScreenDelay;
         
         [Header("Prefabs")]
         public Player PlayerPrefab;
@@ -128,18 +135,16 @@ namespace SpaceInvaders
         public Enemy Enemy3Prefab;
         public EnemyUFO UFOPrefab;
         public Projectile ProjectilePrefab;
-        
-        [Space]
-        public GameplayBounds GameplayBounds;
 
-        [Space]
+        [Header("Vignette")]
+        public FloatRange VignettePowerRange;
+        public Color VignetteColor;
+
+        [Header("Player")]
         public PlayerConfig PlayerConfig;
         
-        [Space]
+        [Header("Enemies")]
         public EnemiesConfig EnemiesConfig;
-        
-        [Space]
-        public WaveConfig WaveConfig;
         
         public Enemy GetEnemyPrefab(EnemyType type)
         {

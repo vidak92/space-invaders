@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 namespace SpaceInvaders
@@ -12,6 +13,8 @@ namespace SpaceInvaders
         public UIButton PlayButton;
         public UIButton HighScoresButton;
         public UIButton ControlsButton;
+
+        public TMP_Text VersionText;
         
         protected override void OnInit()
         {
@@ -27,12 +30,11 @@ namespace SpaceInvaders
             ScoreInfoItemEnemy2.SetPointsValue(GameConfig.EnemiesConfig.GetScoreValueForEnemyType(EnemyType.Enemy1));
             ScoreInfoItemEnemy3.SetPointsValue(GameConfig.EnemiesConfig.GetScoreValueForEnemyType(EnemyType.Enemy1));
             ScoreInfoItemEnemyUFO.SetMysteryValue();
-        }
 
-        protected override void UpdateControlsForCurrentPlatform()
-        {
-            // @TODO for mobile
-            ControlsButton.gameObject.SetActive(true);
+            var isMobilePlatform = AppController.IsMobilePlatform();
+            ControlsButton.gameObject.SetActive(!isMobilePlatform);
+
+            VersionText.text = $"v{Application.version}";
         }
         
         private void OnPlayButtonClicked()

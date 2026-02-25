@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using DG.Tweening;
-using SGSTools.Extensions;
+using SGSTools.Common;
 using SGSTools.Util;
 using UnityEngine;
 
@@ -9,30 +9,30 @@ namespace SpaceInvaders
 {
     public class Player : MonoBehaviour
     {
+        public Rigidbody2D Rigidbody;
         public Collider2D[] Colliders;
         public Health Health;
         public SpriteRenderer SpriteRenderer;
         public ParticleSystem Particles;
         
-        private float _moveSpeedX;
-        private float _accelerationTimer;
-        private readonly float _accelerationTimerEpsilon = 0.064f;
+        private float _moveDirectionX;
+        private Timer _shotCooldownTimer;
         
-        private float _shotCooldownTimer;
-
         private bool _isInvincible;
-        private float _invincibleTimer;
+        private Timer _invincibleTimer;
 
         private List<Color> _materialColors = new List<Color>();
-
         private Vector3 _startPosition = new Vector3(0f, -14f, 0f); // @TODO config
 
         public bool IsActive { get; private set; }
 
+        private AppController AppController => ServiceLocator.Get<AppController>();
         private GameController GameController => ServiceLocator.Get<GameController>();
-        private GameConfig GameConfig => GameController.GameConfig;
+        private AudioController AudioController => ServiceLocator.Get<AudioController>();
+        
+        private GameConfig GameConfig => AppController.GameConfig;
         private PlayerConfig PlayerConfig => GameConfig.PlayerConfig;
-        private GameplayBounds GameplayBounds => GameConfig.GameplayBounds;
+        private GameplayBounds GridBounds => GameConfig.EnemiesConfig.FormationConfig.GridBounds;
 
         public Action OnPlayerKilled { get; set; }
         
@@ -47,7 +47,7 @@ namespace SpaceInvaders
             if (!_isInvincible)
             {
                 _isInvincible = true;
-                _invincibleTimer = 0f;
+                _invincibleTimer.Reset();
                 GameController.OnPlayerShot();
             }
         }
@@ -63,12 +63,12 @@ namespace SpaceInvaders
             transform.position = _startPosition;
             ResetColor();
 
-            _moveSpeedX = 0f;
-            _accelerationTimer = 0f;
-            _shotCooldownTimer = 0f;
+            _moveDirectionX = 0f;
+            // @TODO first cooldown after new wave should be equal to enemy formation spawn duration
+            _shotCooldownTimer.Init(PlayerConfig.ShotCooldownDuration); 
 
             _isInvincible = false;
-            _invincibleTimer = 0f;
+            _invincibleTimer.Init(PlayerConfig.InvincibilityDuration);
 
             SetActive(false);
             SetCollidersEnabled(true);
@@ -77,94 +77,68 @@ namespace SpaceInvaders
         public void OnUpdate(PlayerInput playerInput)
         {
             var dt = Time.deltaTime;
+            _moveDirectionX = playerInput.MoveDirectionX;
 
-            // Move Update
-            if (PlayerConfig.AccelerationDuration > 0f)
+            // shot
+            _shotCooldownTimer.Update(dt);
+            if (playerInput.ShouldShoot && _shotCooldownTimer.IsDone)
             {
-                // Accelerate/decelrate.
-                if (playerInput.MoveDirectionX > 0f)
-                {
-                    // Moving right.
-                    if (_accelerationTimer < PlayerConfig.AccelerationDuration)
-                    {
-                        _accelerationTimer += dt;
-                    }
-                }
-                else if (playerInput.MoveDirectionX < 0f)
-                {
-                    // Moving left.
-                    if (_accelerationTimer > -PlayerConfig.AccelerationDuration)
-                    {
-                        _accelerationTimer -= dt;
-                    }
-                }
-                else
-                {
-                    // Not moving.
-                    if (_accelerationTimer < -_accelerationTimerEpsilon)
-                    {
-                        _accelerationTimer += dt;
-                    }
-                    else if (_accelerationTimer > _accelerationTimerEpsilon)
-                    {
-                        _accelerationTimer -= dt;
-                    }
-
-                    // Clamp velocity if it's close to 0 and there's no input.
-                    if (Mathf.Abs(_accelerationTimer) < _accelerationTimerEpsilon) { _accelerationTimer = 0f; }
-                }
-
-                // Update movment speed. Values for t mean:
-                // -1: Full-speed left.
-                // 1: Full-speed right.
-                // 0: No movement.
-                var t = Mathf.Clamp(_accelerationTimer / PlayerConfig.AccelerationDuration, -1f, 1f);
-
-                // Convert t to [0, 1] range.
-                t = (t + 1f) / 2f;
-
-                // Lerp speed based on t.
-                var maxSpeedX = PlayerConfig.MoveSpeed * dt;
-                _moveSpeedX = Mathf.Lerp(-maxSpeedX, maxSpeedX, t);
-            }
-            else
-            {
-                // Change speed instantly.
-                var targetSpeedX = playerInput.MoveDirectionX * PlayerConfig.MoveSpeed * dt;
-                _moveSpeedX = targetSpeedX;
-            }
-
-            var positionX = Mathf.Clamp(transform.position.x + _moveSpeedX, GameplayBounds.Left, GameplayBounds.Right);
-            transform.SetPositionX(positionX);
-
-            // Shot Update
-            if (_shotCooldownTimer > 0f)
-            {
-                _shotCooldownTimer -= dt;
-            }
-
-            if (playerInput.ShouldShoot && _shotCooldownTimer <= 0f)
-            {
-                _shotCooldownTimer = PlayerConfig.ShotCooldown;
+                _shotCooldownTimer.Reset();
                 GameController.SpawnProjectile(PlayerConfig.ProjectileConfig, transform.position);
+                AudioController.PlaySound(AudioController.PlayerLaserSound);
             }
 
-            // Invincibility Update
+            // invincibility
             if (_isInvincible)
             {
-                var multiplier = Mathf.Cos(Time.time * PlayerConfig.InvincibilityBlinkSpeed);
-                multiplier = Mathf.Abs(multiplier);
-                var color = Color.Lerp(PlayerConfig.InvincibilityColorTint, Color.white, multiplier);
+                var t = Mathf.Cos(Time.time * PlayerConfig.InvincibilityBlinkSpeed);
+                t = Mathf.Abs(t);
+                var color = Color.Lerp(PlayerConfig.InvincibilityColorTint, Color.white, t);
                 SetColorMultiplier(color);
-
-                _invincibleTimer += dt;
-                if (_invincibleTimer > PlayerConfig.InvincibilityDuration)
+                var vignettePower = GameConfig.VignettePowerRange.GetValueAt(t);
+                AppController.UpdateVignette(vignettePower, isAdditive: true);
+                
+                if (_invincibleTimer.Update(dt))
                 {
                     _isInvincible = false;
-                    _invincibleTimer = 0f;
+                    _invincibleTimer.Reset();
                     ResetColor();
+                    AppController.ResetVignette();
                 }
             }
+        }
+
+        public void OnFixedUpdate()
+        {
+            var dt = Time.deltaTime;
+            var velocity = Rigidbody.linearVelocity;
+            var acceleration = PlayerConfig.Acceleration * dt;
+            var maxMoveSpeed = PlayerConfig.MaxMoveSpeed;
+            
+            if (Mathf.Abs(_moveDirectionX) > 0f)
+            {
+                // accelerate to move direction
+                velocity.x += acceleration * Mathf.Sign(_moveDirectionX);
+                velocity.x = Mathf.Clamp(velocity.x, -maxMoveSpeed, maxMoveSpeed);
+            }
+            else if (velocity.x > 0f)
+            {
+                // decelerate to left
+                velocity.x = Mathf.Clamp(velocity.x - acceleration, 0f, maxMoveSpeed);
+            }
+            else if (velocity.x < 0f)
+            {
+                // decelerate to right
+                velocity.x = Mathf.Clamp(velocity.x + acceleration, -maxMoveSpeed, 0f);
+            }
+            
+            // Debug.Log($"input x: {_moveDirectionX}, velocity x: {velocity.x}");
+            Rigidbody.linearVelocity = velocity;
+
+            // clamp position
+            var position = Rigidbody.position;
+            position.x = Mathf.Clamp(position.x, GridBounds.Left, GridBounds.Right);
+            Rigidbody.position = position;
         }
 
         private void ResetColor()

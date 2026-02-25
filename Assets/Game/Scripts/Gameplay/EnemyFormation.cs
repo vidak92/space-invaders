@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using SGSTools.Common;
+using SGSTools.Extensions;
 using SGSTools.Util;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -24,15 +25,19 @@ namespace SpaceInvaders
 
     public class EnemyFormation : MonoBehaviour
     {
-        private EnemyUFO _ufo;
+        public AnimationCurve MoveCurve;
+        public AnimationCurve TiltCurve;
+        
         private Enemy[,] _enemies;
+        private EnemyUFO _ufo;
         
         private float _formationSpeedT;
-        
         private FormationState _formationState;
         private Timer _formationTimer;
+        
         private MoveDirection _moveDirection;
         private MoveDirection _lastHorizontalMoveDirection;
+        
         private Vector2Int _currentGridIndex;
         private Vector2Int _nextGridIndex;
 
@@ -42,22 +47,25 @@ namespace SpaceInvaders
 
         private readonly Vector3 _startPosition = new Vector3(0f, 10f, 0f); // @TODO config
 
+        private AppController AppController => ServiceLocator.Get<AppController>();
         private GameController GameController => ServiceLocator.Get<GameController>();
-        private GameConfig GameConfig => GameController.GameConfig;
-        private GameplayBounds GameplayBounds => GameConfig.GameplayBounds;
-        private WaveConfig WaveConfig => GameConfig.WaveConfig;
+        private AudioController AudioController => ServiceLocator.Get<AudioController>();
+        
+        private GameConfig GameConfig => AppController.GameConfig;
+        private FormationConfig FormationConfig => GameConfig.EnemiesConfig.FormationConfig;
+        private GameplayBounds GridBounds => FormationConfig.GridBounds;
         private UFOConfig UFOConfig => GameConfig.EnemiesConfig.UFOConfig;
 
-        private float IdleDuration => WaveConfig.IdleDurationRange.GetValueAt(_formationSpeedT);
-        private float StepDuration => WaveConfig.StepDurationRange.GetValueAt(_formationSpeedT);
+        private float IdleDuration => FormationConfig.IdleDurationRange.GetValueAt(_formationSpeedT);
+        private float StepDuration => FormationConfig.StepDurationRange.GetValueAt(_formationSpeedT);
 
-        private int WaveRowCount => WaveConfig.EnemyRows.Count;
-        private int WaveColCount => WaveConfig.EnemiesPerRow;
+        private int WaveRowCount => FormationConfig.EnemyRows.Count;
+        private int WaveColCount => FormationConfig.EnemiesPerRow;
 
-        private int GridRowCount => WaveConfig.GridSize.x;
-        private int GridColCount => WaveConfig.GridSize.y;
-        private float GridCellWidth => (GameplayBounds.Right - GameplayBounds.Left) / GridColCount;
-        private float GridCellHeight => (GameplayBounds.Top - GameplayBounds.Bottom) / GridRowCount;
+        private int GridRowCount => FormationConfig.GridSize.x;
+        private int GridColCount => FormationConfig.GridSize.y;
+        private float GridCellWidth => (GridBounds.Right - GridBounds.Left) / GridColCount;
+        private float GridCellHeight => (GridBounds.Top - GridBounds.Bottom) / GridRowCount;
 
         public Transform UFOTransform => _ufo.transform;
 
@@ -66,7 +74,7 @@ namespace SpaceInvaders
             _enemies = new Enemy[WaveColCount, WaveRowCount];
             for (int r = 0; r < WaveRowCount; r++)
             {
-                var enemyType = WaveConfig.EnemyRows[r];
+                var enemyType = FormationConfig.EnemyRows[r];
                 for (int c = 0; c < WaveColCount; c++)
                 {
                     var enemy = Instantiate(GameConfig.GetEnemyPrefab(enemyType), transform);
@@ -89,7 +97,7 @@ namespace SpaceInvaders
             
             // debug draw
             DebugDraw.Settings.SortLayerName = "Background";
-            var bounds = GameConfig.GameplayBounds;
+            var bounds = GridBounds;
             var cellSize = new Vector3(GridCellWidth, GridCellHeight, 0f);
             var halfCellSize = cellSize / 2f;
             var topRight = new Vector3(bounds.Right + halfCellSize.x, bounds.Top + halfCellSize.y, 0f);
@@ -118,7 +126,7 @@ namespace SpaceInvaders
                 DebugDraw.DrawLine(position1, position2);
             }
             
-            // wave speed
+            // enemies
             var totalEnemies = _enemies.Length;
             var activeEnemies = 0;
             foreach (var enemy in _enemies)
@@ -129,7 +137,7 @@ namespace SpaceInvaders
                 }
             }
             _formationSpeedT = 1f - (float)activeEnemies / totalEnemies;
-            _formationSpeedT = Mathf.Pow(_formationSpeedT, WaveConfig.FormationSpeedTPower);
+            _formationSpeedT = Mathf.Pow(_formationSpeedT, FormationConfig.FormationSpeedTPower);
 
             switch (_formationState)
             {
@@ -162,8 +170,10 @@ namespace SpaceInvaders
                     }
                     else if (!_formationTimer.IsDone)
                     {
+                        // TODO move to FixedUpdate?
                         var t = 1f - Mathf.Clamp01(_formationTimer.Time / StepDuration);
-                        LerpToNextGridPosition(t);
+                        var moveT = MoveCurve.Evaluate(t);
+                        LerpToNextGridPosition(moveT);
                     }
                     break;
                 }
@@ -215,6 +225,7 @@ namespace SpaceInvaders
                         var shootingEnemyIndex = Random.Range(0, _enemiesWhoCanShoot.Count);
                         var shootingEnemy = _enemiesWhoCanShoot[shootingEnemyIndex];
                         GameController.SpawnProjectile(GameConfig.EnemiesConfig.ProjectileConfig, shootingEnemy.transform.position);
+                        AudioController.PlaySound(AudioController.EnemyLaserSound);
                     }
                 }
             
@@ -223,6 +234,37 @@ namespace SpaceInvaders
                 {
                     var ufoSpeed = UFOConfig.MoveSpeedRange.GetValueAt(_formationSpeedT);
                     _ufo.OnUpdate(ufoSpeed);
+                }
+            }
+        }
+        
+        public void OnFixedUpdate()
+        {
+            switch (_formationState)
+            {
+                case FormationState.None:
+                {
+                    break;
+                }
+                case FormationState.Spawn:
+                {
+                    break;
+                }
+                case FormationState.Idle:
+                {
+                    break;
+                }
+                case FormationState.Move:
+                {
+                    break;
+                }
+                case FormationState.Empty:
+                {
+                    break;
+                }
+                default:
+                {
+                    break;
                 }
             }
         }
@@ -257,8 +299,8 @@ namespace SpaceInvaders
 
         private void UpdateShotTimer()
         {
-            _shotDelayRange.Min = WaveConfig.ShotDelayRangeMin.GetValueAt(_formationSpeedT);
-            _shotDelayRange.Max = WaveConfig.ShotDelayRangeMax.GetValueAt(_formationSpeedT);
+            _shotDelayRange.Min = FormationConfig.ShotDelayRangeMin.GetValueAt(_formationSpeedT);
+            _shotDelayRange.Max = FormationConfig.ShotDelayRangeMax.GetValueAt(_formationSpeedT);
             var shotDelay = _shotDelayRange.GetRandomValue();
             _shotTimer.Reset(shotDelay);
         }
@@ -275,7 +317,7 @@ namespace SpaceInvaders
                 }
                 case FormationState.Spawn:
                 {
-                    _formationTimer.Reset(WaveConfig.SpawnDuration);
+                    _formationTimer.Reset(FormationConfig.SpawnDuration);
                     _moveDirection = MoveDirection.Right;
                     _lastHorizontalMoveDirection = _moveDirection;
                     _formationSpeedT = 1f;
@@ -290,7 +332,7 @@ namespace SpaceInvaders
                         {
                             var enemy = _enemies[c, r];
                             var spawnPosition = new Vector3(c * GridCellWidth, -r * GridCellHeight, 0f);
-                            var spawnDuration = WaveConfig.SpawnDuration / 2f;
+                            var spawnDuration = FormationConfig.SpawnDuration / 2f;
                             var gridDistance = Vector2Int.Distance(new Vector2Int(0, 0), new Vector2Int(c, r));
                             var spawnDelayT = gridDistance / maxGridDistance;
                             var spawnDelay = Mathf.Lerp(0f, spawnDuration / 2f, spawnDelayT);
@@ -310,6 +352,7 @@ namespace SpaceInvaders
                 case FormationState.Idle:
                 {
                     _formationTimer.Reset(IdleDuration);
+                    LerpToNextGridPosition(1f);
                     _currentGridIndex = _nextGridIndex;
                     break;
                 }
@@ -326,7 +369,7 @@ namespace SpaceInvaders
                 }
                 case FormationState.Empty:
                 {
-                    _formationTimer.Reset(WaveConfig.NewWaveDelay);
+                    _formationTimer.Reset(FormationConfig.NewWaveDelay);
                     foreach (var enemy in _enemies)
                     {
                         enemy.SetActive(false);
@@ -351,7 +394,7 @@ namespace SpaceInvaders
 
         private Vector3 GetPositionForGridIndex(Vector2Int gridIndex)
         {
-            var startPosition = new Vector3(GameplayBounds.Left, GameplayBounds.Top, 0f);
+            var startPosition = new Vector3(GridBounds.Left, GridBounds.Top, 0f);
             var offset = new Vector3(gridIndex.x * GridCellWidth, -gridIndex.y * GridCellHeight, 0f);
             return startPosition + offset;
         }

@@ -1,6 +1,5 @@
 using System;
 using DG.Tweening;
-using DG.Tweening.Plugins;
 using SGSTools.Extensions;
 using SGSTools.Util;
 using UnityEngine;
@@ -38,7 +37,7 @@ namespace SpaceInvaders
             Health.OnDamageTaken += OnDamageTaken;
             SetActive(false);
         }
-        
+
         private void OnDamageTaken()
         {
             Collider.enabled = false;

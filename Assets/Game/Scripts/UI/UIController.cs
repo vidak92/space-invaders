@@ -10,7 +10,6 @@ namespace SpaceInvaders
     {
         public Canvas Canvas;
         
-        public LoadingScreen LoadingScreen;
         public MainMenuScreen MainMenuScreen;
         public GameplayScreen GameplayScreen;
         public GameOverScreen GameOverScreen;
@@ -28,7 +27,6 @@ namespace SpaceInvaders
             Canvas.worldCamera = Camera.main;
             Canvas.sortingLayerName = SortingLayers.Overlay;
 
-            LoadingScreen.Init();
             MainMenuScreen.Init();
             GameplayScreen.Init();
             GameOverScreen.Init();

@@ -16,19 +16,8 @@ namespace SpaceInvaders
 
     public class GameController : MonoBehaviour
     {
-        public GameConfig GameConfig;
-
-        [Space]
         public EnemyFormation EnemyFormation;
         
-        [Space]
-        public ObjectShaker CameraShaker;
-        public InputController InputController;
-        public UIController UIController;
-        
-
-        public HighScoreService HighScoreService { get; private set; } = new HighScoreService();
-
         private ObjectPool<Projectile> _projectilePool;
         
         private GameState _currentState;
@@ -37,20 +26,16 @@ namespace SpaceInvaders
         private int _score;
         private int _wave;
         private int _lives;
-        
+
+        private AppController AppController => ServiceLocator.Get<AppController>();
+        private AudioController AudioController => ServiceLocator.Get<AudioController>();
+        private InputController InputController => ServiceLocator.Get<InputController>();
+        private UIController UIController => ServiceLocator.Get<UIController>();
+
+        private GameConfig GameConfig => AppController.GameConfig;
+
         private void Awake()
         {
-            ServiceLocator.Add<GameController>(this);
-            
-            Application.targetFrameRate = 60;
-            Camera.main.orthographicSize = GameConfig.CameraSize;
-            
-            DebugDraw.IsEnabled = false;
-            DebugDraw.Settings.DefaultColor = Color.gray;
-            
-            InputController.Init();
-            UIController.Init();
-            
             _projectilePool = ObjectPool<Projectile>.CreateWithGameObject(GameConfig.ProjectilePrefab, 100, "ProjectilePool");
             // _projectilePool.Parent.parent = transform;
 
@@ -69,7 +54,8 @@ namespace SpaceInvaders
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Alpha1))
+            // debug
+            if (Input.GetKeyDown(KeyCode.BackQuote))
             {
                 DebugDraw.IsEnabled = !DebugDraw.IsEnabled;
             }
@@ -82,12 +68,55 @@ namespace SpaceInvaders
                 }
                 case GameState.Gameplay:
                 {
-                    InputController.UpdateActionsForStandalone();
+                    InputController.OnUpdate();
+                    if (AppController.IsMobilePlatform())
+                    {
+                        var directionX = UIController.GameplayScreen.MoveJoystick.Direction.x;
+                        InputController.SetInputAction(InputAction.MoveRight, directionX > 0f);
+                        InputController.SetInputAction(InputAction.MoveLeft, directionX < 0f);
+                    }
+                    
                     if (_player.IsActive)
                     {
                         var playerInput = InputController.GetPlayerInput();
                         _player.OnUpdate(playerInput);
                         EnemyFormation.OnUpdate();
+                    }
+                    break;
+                }
+                case GameState.GameOver:
+                {
+                    break;
+                }
+                case GameState.HighScores:
+                {
+                    break;
+                }
+                case GameState.Controls:
+                {
+                    break;
+                }
+                default:
+                {
+                    break;
+                }
+            }
+        }
+
+        private void FixedUpdate()
+        {
+            switch (_currentState)
+            {
+                case GameState.MainMenu:
+                {
+                    break;
+                }
+                case GameState.Gameplay:
+                {
+                    if (_player.IsActive)
+                    {
+                        _player.OnFixedUpdate();
+                        EnemyFormation.OnFixedUpdate();
                     }
                     break;
                 }
@@ -166,8 +195,9 @@ namespace SpaceInvaders
             UIController.GameplayScreen.SetPauseOverlayVisible(false);
         }
 
-        public void GameOver()
+        private void GameOver()
         {
+            AudioController.PlaySound(AudioController.GameOverSound);
             UIController.StartScreenTransition(UIController.GameOverScreen, onComplete: () =>
             {
                 _currentState = GameState.GameOver;
@@ -175,8 +205,9 @@ namespace SpaceInvaders
                 EnemyFormation.EndWave();
                 _projectilePool.ReturnAllActiveObjects();
                 var highScoreStats = new HighScoreStats(_score);
-                HighScoreService.AddNewHighScore(highScoreStats);
-                UIController.GameOverScreen.SetStats(_score, _wave); 
+                AppController.HighScoreService.AddNewHighScore(highScoreStats);
+                UIController.GameOverScreen.SetStats(_score, _wave);
+                AppController.ResetVignette();
             });
         }
 
@@ -193,23 +224,23 @@ namespace SpaceInvaders
             _lives--;
             _player.OnLifeLost(_lives);
             UIController.GameplayScreen.SetGameStats(_score, _wave, _lives);
-            CameraShaker.StartShake(_lives > 0 ? 0.5f : 1f); // @TODO config?
-            // @TODO update UI and game flow
+            AppController.CameraShaker.StartShake(1f); // @TODO config?
+            AudioController.PlaySound(AudioController.ExplosionSound, volume: 0.25f); // @TODO config
         }
 
         public void OnEnemyShot(EnemyType enemyType)
         {
             _score += GameConfig.EnemiesConfig.GetScoreValueForEnemyType(enemyType);
             UIController.GameplayScreen.SetGameStats(_score, _wave, _lives);
-            CameraShaker.StartShake(enemyType == EnemyType.UFO ? 0.5f : 0f); // @TODO config?
-            // @TODO update UI and game flow
+            AppController.CameraShaker.StartShake(enemyType == EnemyType.UFO ? 0.5f : 0f); // @TODO config?
+            AudioController.PlaySound(AudioController.ExplosionSound, volume: 0.25f); // @TODO config
         }
 
         public void OnWaveStart()
         {
             _wave++;
             UIController.GameplayScreen.SetGameStats(_score, _wave, _lives);
-            // @TODO update UI and game flow
+            AudioController.PlaySound(AudioController.NewWaveSound);
         }
 
         public void SpawnProjectile(ProjectileConfig projectileConfig, Vector3 position)

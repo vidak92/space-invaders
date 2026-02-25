@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using SGSTools.Extensions;
+using SGSTools.Util;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -39,6 +40,8 @@ namespace SpaceInvaders
 
         private Dictionary<InputAction, bool> _actions;
 
+        private AppController AppController => ServiceLocator.Get<AppController>();
+
         public void Init()
         {
             _actions = new Dictionary<InputAction, bool>
@@ -48,7 +51,6 @@ namespace SpaceInvaders
                 [InputAction.MoveRight] = false,
                 [InputAction.Shoot] = false,
             };
-            UpdateActionsForStandalone();
         }
 
         public PlayerInput GetPlayerInput()
@@ -79,16 +81,19 @@ namespace SpaceInvaders
             return _actions.HasKey(type) ? _actions[type] : false;
         }
 
-        public void UpdateActionsForStandalone()
+        public void OnUpdate()
         {
-            var moveLeftKey = Input.GetKey(_moveLeftKeyPrimary) || Input.GetKey(_moveLeftKeySecondary);
-            var moveRightKey = Input.GetKey(_moveRightKeyPrimary) || Input.GetKey(_moveRightKeySecondary);
-            var isPointerOverUI = EventSystem.current.IsPointerOverGameObject();
-            var shootKey = Input.GetKey(_shootKeySecondary) || (!isPointerOverUI && Input.GetMouseButton(_shootMouseButtonPrimary));
+            if (!AppController.IsMobilePlatform())
+            {
+                var moveLeftKey = Input.GetKey(_moveLeftKeyPrimary) || Input.GetKey(_moveLeftKeySecondary);
+                var moveRightKey = Input.GetKey(_moveRightKeyPrimary) || Input.GetKey(_moveRightKeySecondary);
+                var isPointerOverUI = EventSystem.current.IsPointerOverGameObject();
+                var shootKey = Input.GetKey(_shootKeySecondary) || (!isPointerOverUI && Input.GetMouseButton(_shootMouseButtonPrimary));
 
-            SetInputAction(InputAction.MoveLeft, moveLeftKey);
-            SetInputAction(InputAction.MoveRight, moveRightKey);
-            SetInputAction(InputAction.Shoot, shootKey);
+                SetInputAction(InputAction.MoveLeft, moveLeftKey);
+                SetInputAction(InputAction.MoveRight, moveRightKey);
+                SetInputAction(InputAction.Shoot, shootKey);   
+            }
         }
     }
 }

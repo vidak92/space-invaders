@@ -4941,6 +4941,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf715cf0197d3fa49959d992ea44b447, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Rigidbody: {fileID: 7333625519953620619}
   Enemy: {fileID: 4581708685504069219}
 --- !u!114 &4581708685504069219
 MonoBehaviour:

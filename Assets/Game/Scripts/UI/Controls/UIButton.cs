@@ -1,4 +1,5 @@
 using SGSTools.Extensions;
+using SGSTools.Util;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -16,6 +17,8 @@ namespace SpaceInvaders
         public Sprite SpriteDefault;
         public Sprite SpritePressed;
         public float TextPositionYOffsetOnPress;
+        
+        private AudioController AudioController => ServiceLocator.Get<AudioController>();
 
         public void Awake()
         {
@@ -38,12 +41,14 @@ namespace SpaceInvaders
         {
             Image.sprite = SpritePressed;
             Text.rectTransform.SetAnchoredPositionY(-TextPositionYOffsetOnPress);
+            AudioController.PlaySound(AudioController.ButtonPressSound);
         }
 
         public void OnPointerUp(PointerEventData eventData)
         {
             Image.sprite = SpriteDefault;
             Text.rectTransform.SetAnchoredPositionY(0f);
+            AudioController.PlaySound(AudioController.ButtonReleaseSound);
         }
     }
 }
