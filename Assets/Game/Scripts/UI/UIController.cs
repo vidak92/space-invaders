@@ -19,8 +19,15 @@ namespace SpaceInvaders
         [Space]
         public Image TransitionImage;
 
+        [Space]
+        public Button MuteButton;
+        public Sprite AudioOnSprite;
+        public Sprite AudioOffSprite;
+
         public BaseScreen ActiveScreen { get; private set; }
         public bool IsTransitioning { get; private set; }
+
+        private bool IsAudioMuted => AudioListener.volume == 0f;
 
         public void Init()
         {
@@ -35,6 +42,9 @@ namespace SpaceInvaders
 
             TransitionImage.SetAlpha(1f);
             TransitionImage.gameObject.SetActive(true);
+
+            MuteButton.onClick.AddListener(OnMuteButtonClicked);
+            MuteButton.image.sprite = AudioOnSprite;
         }
 
         public void SetActiveScreen(BaseScreen screen)
@@ -69,6 +79,12 @@ namespace SpaceInvaders
                 IsTransitioning = false;
                 TransitionImage.gameObject.SetActive(false);
             });
+        }
+
+        private void OnMuteButtonClicked()
+        {
+            AudioListener.volume = IsAudioMuted ? 1f : 0f;
+            MuteButton.image.sprite = IsAudioMuted ? AudioOffSprite : AudioOnSprite;
         }
     }
 }

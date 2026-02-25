@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: b3a116550a50a4d43b03bc94a9dfebe8
+guid: 9ea36e00ae2764dc88795062a9744241
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1145220741083561907
-    second: keyboard_a_0
+      213: 6308264801367439915
+    second: icon_music_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: keyboard_a_0
+      name: icon_music_0
       rect:
         serializedVersion: 2
-        x: 7
-        y: 7
-        width: 50
-        height: 50
+        x: 0
+        y: 0
+        width: 48
+        height: 48
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 3bff1b54234a4ef00800000000000000
-      internalID: 1145220741083561907
+      spriteID: b2a3b9a0a657b8750800000000000000
+      internalID: 6308264801367439915
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      keyboard_a_0: 1145220741083561907
+      icon_music_0: 6308264801367439915
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

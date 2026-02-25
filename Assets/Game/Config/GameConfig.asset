@@ -68,7 +68,7 @@ MonoBehaviour:
         Max: 3.5
     FormationConfig:
       NewWaveDelay: 2
-      SpawnDuration: 1.5
+      SpawnDuration: 1.2
       FormationSpeedTPower: 1
       StepDurationRange:
         Min: 0.5

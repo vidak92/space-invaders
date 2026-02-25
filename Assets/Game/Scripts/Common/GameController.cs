@@ -217,6 +217,7 @@ namespace SpaceInvaders
             _player.SetActive(false);
             _projectilePool.ReturnAllActiveObjects();
             ShowMainMenu();
+            AppController.ResetVignette();
         }
 
         public void OnPlayerShot()
@@ -225,7 +226,7 @@ namespace SpaceInvaders
             _player.OnLifeLost(_lives);
             UIController.GameplayScreen.SetGameStats(_score, _wave, _lives);
             AppController.CameraShaker.StartShake(1f); // @TODO config?
-            AudioController.PlaySound(AudioController.ExplosionSound, volume: 0.25f); // @TODO config
+            AudioController.PlaySound(AudioController.ExplosionSound, volume: 0.1f); // @TODO config
         }
 
         public void OnEnemyShot(EnemyType enemyType)
@@ -233,7 +234,7 @@ namespace SpaceInvaders
             _score += GameConfig.EnemiesConfig.GetScoreValueForEnemyType(enemyType);
             UIController.GameplayScreen.SetGameStats(_score, _wave, _lives);
             AppController.CameraShaker.StartShake(enemyType == EnemyType.UFO ? 0.5f : 0f); // @TODO config?
-            AudioController.PlaySound(AudioController.ExplosionSound, volume: 0.25f); // @TODO config
+            AudioController.PlaySound(AudioController.ExplosionSound, volume: 0.1f); // @TODO config
         }
 
         public void OnWaveStart()

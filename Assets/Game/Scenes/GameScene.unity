@@ -169,7 +169,7 @@ MonoBehaviour:
   EnemyLaserSound: {fileID: 8300000, guid: ed568ec8fae2e49d98fe1a8021e4f045, type: 3}
   ExplosionSound: {fileID: 8300000, guid: 256b3a270277441c4b952c412e3323f4, type: 3}
   GameOverSound: {fileID: 8300000, guid: dc1264b532ce94d5f826fcfab0155b5b, type: 3}
-  NewWaveSound: {fileID: 8300000, guid: 94620836626c44c15af4b26de210ce29, type: 3}
+  NewWaveSound: {fileID: 8300000, guid: a424ca11b1be348aebdb37a2e3c03feb, type: 3}
   ButtonPressSound: {fileID: 8300000, guid: 84765e19a3e134c6f8404d34a87b5829, type: 3}
   ButtonReleaseSound: {fileID: 8300000, guid: 3f4a56dd42f574da1a5421341938ff25, type: 3}
 --- !u!1 &406752268
